@@ -10,15 +10,7 @@ from RegIncr import RegIncr
 # "dump_vcd" as an argument to your unit test, and then you can dump VCD
 # with the --dump-vcd option to py.test.
 
-def test_basic( dump_vcd ):
-
-  # Get list of input values from command line
-  
-  input_values = [ int(x,0) for x in argv[1:] ]
-  
-  # Add three zero values to end of list of input values
-  
-  input_values.extend( [0]*3 )
+def test_basic( dump_vcd = None):
 
   # Elaborate the model
 
@@ -57,16 +49,14 @@ def test_basic( dump_vcd ):
 
     sim.cycle()
 
-  # Apply input values and display output values
+  # Cycle-by-cycle tests
 
-  for input_value in input_values:
-    out = 0
-    t(input_value, out)
-
-    print " cycle = {}: in = {}, out = {}" \
-      .format( sim.ncycles, model.in_, model.out )
-
-
+  t( 0x00, '?' )
+  t( 0x13, 0x01 )
+  t( 0x27, 0x14 )
+  t( 0x00, 0x28 )
+  t( 0x00, 0x01 )
+  t( 0x00, 0x01 )
 
 
-
+  
