@@ -15,6 +15,7 @@ def test_basic( dump_vcd = None):
   # Elaborate the model
 
   model = RegIncr()
+  v = TranslationTool(model)
   model.vcd_file = dump_vcd
   model.elaborate()
 
