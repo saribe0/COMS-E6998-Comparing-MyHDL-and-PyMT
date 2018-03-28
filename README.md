@@ -1,6 +1,10 @@
 # COMS-E6998-Comparing-MyHDL-and-PyMTL
 COMS E6998 FPGAs Then and Now Project: Comparing two python to verilog conversion packages - MyHDL and PyMTL
 
+## Benchmark Thoughts
+* Could use ISCAS '85, ISCAS '89, ITC/ISCAS '99, 74X from http://pld.ttu.ee/~maksim/benchmarks/
+* Maybe AES ECB from https://github.com/secworks/aes
+
 ## MyHDL
 #### Notes
 * Open source & free
