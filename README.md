@@ -5,6 +5,7 @@ COMS E6998 FPGAs Then and Now Project: Comparing two python to verilog conversio
 * Could use ISCAS '85, ISCAS '89, ITC/ISCAS '99, 74X from http://pld.ttu.ee/~maksim/benchmarks/
 * Maybe AES ECB from https://github.com/secworks/aes
 * Maybe SHA1 from https://github.com/secworks/sha1
+* Plan to use one or two designs from https://github.com/secworks?utf8=%E2%9C%93&tab=repositories&q=&type=&language=
 
 ## MyHDL
 #### Notes
