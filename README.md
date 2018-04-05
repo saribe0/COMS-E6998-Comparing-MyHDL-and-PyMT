@@ -6,6 +6,7 @@ COMS E6998 FPGAs Then and Now Project: Comparing two python to verilog conversio
 * Maybe AES ECB from https://github.com/secworks/aes
 * Maybe SHA1 from https://github.com/secworks/sha1
 * Plan to use one or two designs from https://github.com/secworks?utf8=%E2%9C%93&tab=repositories&q=&type=&language=
+* Could also use from here (fft, aes, sort, etc.) https://github.com/breagen/MachSuite/
 
 ## MyHDL
 #### Notes
