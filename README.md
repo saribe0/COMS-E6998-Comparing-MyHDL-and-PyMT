@@ -1,6 +1,10 @@
 # COMS-E6998-Comparing-MyHDL-and-PyMTL
 COMS E6998 FPGAs Then and Now Project: Comparing two python to verilog conversion packages - MyHDL and PyMTL
 
+## FPGA Implementation
+* Expected FPGA is a SoCKit (uses Altera Cyclone V) http://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=205&No=816&PartNo=1
+* Design software https://www.altera.com/downloads/download-center.html
+
 ## Benchmark Thoughts
 * Could use ISCAS '85, ISCAS '89, ITC/ISCAS '99, 74X from http://pld.ttu.ee/~maksim/benchmarks/
 * Maybe AES ECB from https://github.com/secworks/aes
