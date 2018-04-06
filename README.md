@@ -16,6 +16,7 @@ COMS E6998 FPGAs Then and Now Project: Comparing two python to verilog conversio
 * Could also use from here (fft, aes, sort, etc.) https://github.com/breagen/MachSuite/
 * AES or SHA1 or a graph algorithm
 * Start with GCD
+* https://opencores.org/
 
 ## MyHDL
 #### Notes
