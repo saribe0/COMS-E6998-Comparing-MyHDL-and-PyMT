@@ -5,6 +5,8 @@ COMS E6998 FPGAs Then and Now Project: Comparing two python to verilog conversio
 * Expected FPGA is a SoCKit (uses Altera Cyclone V) http://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=205&No=816&PartNo=1
 * Design software https://www.altera.com/downloads/download-center.html
 * Posible tutorial to get started https://zhehaomao.com/blog/fpga/2013/12/22/sockit-1.html
+* Want -> fmax, luts, cycles
+* iVerilog / iVerilator / Models
 
 ## Benchmark Thoughts
 * Could use ISCAS '85, ISCAS '89, ITC/ISCAS '99, 74X from http://pld.ttu.ee/~maksim/benchmarks/
@@ -12,6 +14,8 @@ COMS E6998 FPGAs Then and Now Project: Comparing two python to verilog conversio
 * Maybe SHA1 from https://github.com/secworks/sha1
 * Plan to use one or two designs from https://github.com/secworks?utf8=%E2%9C%93&tab=repositories&q=&type=&language=
 * Could also use from here (fft, aes, sort, etc.) https://github.com/breagen/MachSuite/
+* AES or SHA1 or a graph algorithm
+* Start with GCD
 
 ## MyHDL
 #### Notes
