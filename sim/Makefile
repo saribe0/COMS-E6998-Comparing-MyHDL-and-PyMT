@@ -54,9 +54,9 @@ syn:
 	BUILD_PATH=$(SYN_PATH) TOP=$(TOP) NUM_PROCESSORS=$(NUM_PROCESSORS) FAMILY=$(FAMILY) quartus_sh -t $(SCRIPTS_PATH)/q_syn.tcl
 
 clean:
-	rm *~
-	rm modelsim.ini
-	rm transcript
-	rm $(SOURCE_PATH)/*~
-	rm -rf $(SYN_PATH)
-	rm -rf $(SIM_PATH)
+	-rm *~
+	-rm modelsim.ini
+	-rm transcript
+	-rm $(SOURCE_PATH)/*~
+	-rm -rf $(SYN_PATH)
+	-rm -rf $(SIM_PATH)
