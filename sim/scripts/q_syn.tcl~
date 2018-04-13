@@ -50,6 +50,6 @@ qexec "quartus_map ${TOP} ${SOURCE_FILES}"
 qexec "quartus_fit ${TOP}"
 
 # Analyze timing
-qexec "quartus_sta ${TOP}"
+#qexec "quartus_tan ${TOP}"
 
-qexec "quartus_sim ${TOP}"
+qexec "quartus_sta ${TOP}"

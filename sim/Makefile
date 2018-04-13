@@ -7,14 +7,17 @@ all: help
 ## Global Design Variables ##
 DESIGN_PATH 	= $(PWD)
 SOURCE_PATH 	= $(DESIGN_PATH)/src
-BUILD_PATH  	= $(DESIGN_PATH)/prj
+SIM_PATH 	= $(DESIGN_PATH)/sim
+SYN_PATH  	= $(DESIGN_PATH)/syn
 SCRIPTS_PATH 	= $(DESIGN_PATH)/scripts
 SIMTOP 		= testbench
 TOP 		= regi
-FAMILY 		= fam
+FAMILY 		= "Cyclone V"
+NUM_PROCESSORS  = 2
 
+## Generate list of source files ##
 pref 		= --source=
-files 		= $(wildcard $(SOURCE_PATH)/*)
+files 		= $(wildcard $(SOURCE_PATH)/*.v)
 SOURCE_FILES 	= $(foreach file, $(files), $(pref)$(file))
 export SOURCE_FILES
 
@@ -28,11 +31,32 @@ help:
 	@echo
 	@echo " make clean 		: Cleans everything Quartus related"
 
+sim-compile:
+	mkdir -p $(SIM_PATH)
+	cd $(SIM_PATH)
+	vlib $(SIM_PATH)/WORK
+	vmap work $(SIM_PATH)/WORK
+	for each in $(wildcard $(SOURCE_PATH)/*.vhd) ; do \
+                vcom -quiet $$each ; \
+        done
+	for each in $(wildcard $(SOURCE_PATH)/*.v) ; do \
+		vlog -quiet $$each ; \
+	done
+
+sim-gui: sim-compile
+	vsim testbench
+
+sim: sim-compile
+	vsim -c testbench
 
 syn:
-	BUILD_PATH=$(BUILD_PATH) TOP=$(TOP) FAMILY=$(FAMILY) quartus_sh -t $(SCRIPTS_PATH)/q_syn.tcl
-
+	mkdir -p $(SYN_PATH)
+	BUILD_PATH=$(SYN_PATH) TOP=$(TOP) NUM_PROCESSORS=$(NUM_PROCESSORS) FAMILY=$(FAMILY) quartus_sh -t $(SCRIPTS_PATH)/q_syn.tcl
 
 clean:
 	rm *~
-	rm $(BUILD_PATH)/*
+	rm modelsim.ini
+	rm transcript
+	rm $(SOURCE_PATH)/*~
+	rm -rf $(SYN_PATH)
+	rm -rf $(SIM_PATH)
