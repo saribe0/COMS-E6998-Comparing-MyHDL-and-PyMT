@@ -66,9 +66,9 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 	##----------------------------------------------------------------
 	@always_comb
 	def logic():
-		core_block.next = ConcatSignal(block_reg[00], block_reg[01], block_reg[02], block_reg[03],
-											 block_reg[04], block_reg[05], block_reg[06], block_reg[07],
-											 block_reg[08], block_reg[09], block_reg[10], block_reg[11],
+		core_block.next = ConcatSignal(block_reg[0], block_reg[1], block_reg[2], block_reg[3],
+											 block_reg[4], block_reg[5], block_reg[6], block_reg[7],
+											 block_reg[8], block_reg[9], block_reg[10], block_reg[11],
 											 block_reg[12], block_reg[13], block_reg[14], block_reg[15])
 		read_data.next = tmp_read_data
 		error.next = tmp_error
@@ -87,7 +87,7 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 	## asynchronous active low reset.
 	##----------------------------------------------------------------
 	@always(clk.posedge or reset_n.negedge)
-	def reg_update:
+	def reg_update():
 
 		if not reset_n:
 			init_reg.next = 0
@@ -116,7 +116,7 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 	##
 	## The interface command decoding logic.
 	##----------------------------------------------------------------
-	@always(*)
+	@always(init_new, next_new, block_we, tmp_read_data, tmp_error, address, cs, we)
 	def api():
 		init_new[:] 		= 0
 		next_new[:] 		= 0
@@ -126,9 +126,9 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 
 		if cs:
 			if we:
-				if ((address >= ADDR_BLOCK0) && (address <= ADDR_BLOCK16)):
+				if ((address >= ADDR_BLOCK0) and (address <= ADDR_BLOCK16)):
 					block_we = 1;
-				if (address == ADDR_CTRL)
+				if (address == ADDR_CTRL):
 					init_new.next = write_data[CTRL_INIT_BIT];
 					next_new.next = write_data[CTRL_NEXT_BIT];
 

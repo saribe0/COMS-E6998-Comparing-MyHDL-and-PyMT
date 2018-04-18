@@ -141,7 +141,7 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	##
 	## The logic needed to init as well as update the digest.
 	##----------------------------------------------------------------
-	@always(*)
+	@always(H0_new, H1_new, H2_new, H3_new, H4_new, H_we, H0_0, H0_1, H0_2, H0_3, H0_4, H0_reg, H1_reg, H2_reg, H3_reg, H4_reg, a_reg, b_reg, c_reg, d_reg, e_reg)
 	def digest_logic():
 		H0_new[:] = 0x0
 		H1_new[:] = 0x0
