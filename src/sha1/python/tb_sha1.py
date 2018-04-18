@@ -308,7 +308,7 @@ def tb_sha1():
 	## Write the given block to the dut.
 	##----------------------------------------------------------------
 	@instance
-	def write_block(block)
+	def write_block(block):
 		write_word(ADDR_BLOCK0,  block[512 : 480])
 		write_word(ADDR_BLOCK1,  block[480 : 448])
 		write_word(ADDR_BLOCK2,  block[448 : 416])
@@ -394,6 +394,7 @@ def tb_sha1():
 
 		if (digest_data == expected):
 			# print "TC%01d: OK.", tc_ctr
+			pass
 		else:
 			# print "TC%01d: ERROR.", tc_ctr
 			# print "TC%01d: Expected: 0x%040x", tc_ctr, expected
@@ -427,6 +428,7 @@ def tb_sha1():
 
 		if (digest_data == expected0):
 			#print "TC%01d first block: OK.", tc_ctr
+			pass
 		else:
 			#print "TC%01d: ERROR in first digest", tc_ctr
 			#print "TC%01d: Expected: 0x%040x", tc_ctr, expected0
@@ -444,7 +446,8 @@ def tb_sha1():
 
 		if (digest_data == expected1):
 			#print "TC%01d final block: OK.", tc_ctr
-		else
+			pass
+		else:
 			#print "TC%01d: ERROR in final digest", tc_ctr
 			#print "TC%01d: Expected: 0x%040x", tc_ctr, expected1
 			#print "TC%01d: Got:      0x%040x", tc_ctr, digest_data
