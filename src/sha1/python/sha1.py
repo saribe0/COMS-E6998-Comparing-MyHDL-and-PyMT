@@ -1,4 +1,6 @@
 from myhdl import *
+from sha1_core import core
+
 
 def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 
