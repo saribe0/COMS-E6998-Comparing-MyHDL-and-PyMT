@@ -1,0 +1,6 @@
+
+State Machine - |sha1|sha1_core:core|sha1_ctrl_reg
+Name sha1_ctrl_reg.CTRL_IDLE sha1_ctrl_reg.CTRL_DONE sha1_ctrl_reg.CTRL_ROUNDS 
+sha1_ctrl_reg.CTRL_IDLE 0 0 0 
+sha1_ctrl_reg.CTRL_ROUNDS 1 0 1 
+sha1_ctrl_reg.CTRL_DONE 1 1 0 

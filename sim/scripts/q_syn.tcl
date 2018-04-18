@@ -26,7 +26,7 @@ if {[info exists env(SOURCE_FILES)]} {
 }
 
 if {![info exists $env(BUILD_PATH)]} {
-    set BUILD_PATH "./prj"
+    set BUILD_PATH "./syn"
 }
 
 # Enter the build path
@@ -52,4 +52,3 @@ qexec "quartus_fit ${TOP}"
 # Analyze timing
 qexec "quartus_sta ${TOP}"
 
-qexec "quartus_sim ${TOP}"

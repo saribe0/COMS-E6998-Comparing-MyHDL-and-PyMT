@@ -10,8 +10,8 @@ SOURCE_PATH 	= $(DESIGN_PATH)/src
 SIM_PATH 	= $(DESIGN_PATH)/sim
 SYN_PATH  	= $(DESIGN_PATH)/syn
 SCRIPTS_PATH 	= $(DESIGN_PATH)/scripts
-SIMTOP 		= testbench
-TOP 		= regi
+SIMTOP 		= tb_sha1
+TOP 		= sha1
 FAMILY 		= "Cyclone V"
 NUM_PROCESSORS  = 2
 
@@ -20,6 +20,8 @@ pref 		= --source=
 files 		= $(wildcard $(SOURCE_PATH)/*.v)
 SOURCE_FILES 	= $(foreach file, $(files), $(pref)$(file))
 export SOURCE_FILES
+
+.PHONY: syn clean
 
 help:
 	@echo " Synthesize and simulate Verilog/VHDL with Quartus and ModelSim "
@@ -44,13 +46,12 @@ sim-compile:
 	done
 
 sim-gui: sim-compile
-	vsim testbench
+	vsim $(SIMTOP)
 
 sim: sim-compile
-	vsim -c testbench
+	vsim -c $(SIMTOP)
 
 syn:
-	mkdir -p $(SYN_PATH)
 	BUILD_PATH=$(SYN_PATH) TOP=$(TOP) NUM_PROCESSORS=$(NUM_PROCESSORS) FAMILY=$(FAMILY) quartus_sh -t $(SCRIPTS_PATH)/q_syn.tcl
 
 clean:
