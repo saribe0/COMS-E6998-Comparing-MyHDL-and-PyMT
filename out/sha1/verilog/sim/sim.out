@@ -1,0 +1,28 @@
+Reading pref.tcl
+
+# 10.5b
+
+# vsim -c -do "run -a" tb_sha1 
+# Start time: 16:18:09 on Apr 19,2018
+# Loading work.tb_sha1
+# Loading work.sha1
+# Loading work.sha1_core
+# Loading work.sha1_w_mem
+# run -a
+#    -- Testbench for sha1 started --
+# *** Toggle reset.
+# DUT name: sha1    
+# DUT version: 0.60
+# *** TC0 - Single block test started.
+# TC0: OK.
+# *** TC0 - Single block test done.
+# *** TC1 - Double block test started.
+# TC1 first block: OK.
+# TC1 final block: OK.
+# *** TC1 - Double block test done.
+# *** All  2 test cases completed successfully.
+# *** Simulation done. ***
+# ** Note: $finish    : /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/tb_sha1.v(576)
+#    Time: 3200 ns  Iteration: 0  Instance: /tb_sha1
+# End time: 16:18:09 on Apr 19,2018, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
