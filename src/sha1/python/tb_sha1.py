@@ -1,7 +1,7 @@
 from myhdl import *
 from sha1 import sha1
 
-def tb_sha1():
+def bench():
 
 	##----------------------------------------------------------------
 	## Internal constant and parameter definitions.
@@ -193,12 +193,13 @@ def tb_sha1():
 	##----------------------------------------------------------------
 	## reset_dut()
 	##----------------------------------------------------------------
+	'''
 	@instance
 	def reset_dut():
 		tb_reset_n.next = 0;
 		yield delay(4 * CLK_HALF_PERIOD)
 		tb_reset_n.next = 1;
-
+	'''
 
 	##----------------------------------------------------------------
 	## init_sim()
@@ -218,7 +219,7 @@ def tb_sha1():
 		tb_address.next[:]	= 0
 		tb_data_in.next[:]	= 0
 
-
+	'''
 	##----------------------------------------------------------------
 	## display_test_result()
 	##
@@ -266,25 +267,25 @@ def tb_sha1():
 
 		read_data[:] = tb_data_out
 		tb_cs = 0
-
+'''
 		'''
 		if DEBUG_TOP:
 			print "*** Reading 0x%08x from 0x%02x.", read_data, address
 			print ""
 		'''
-
+'''
 	##----------------------------------------------------------------
 	## write_word()
 	##
 	## Write the given word to the DUT using the DUT interface.
 	##----------------------------------------------------------------
-	def write_word(address, word):
+	def write_word(address, word):'''
 		'''
 		if DEBUG_TOP:
 			print "*** Writing 0x%08x to 0x%02x.", word, address
 			print ""
 		'''
-		tb_address[:] = address
+'''		tb_address[:] = address
 		tb_data_in[:] = word
 		tb_cs = 1
 		tb_write_read = 1;
@@ -337,11 +338,11 @@ def tb_sha1():
 		version[:] = read_data
 
 		'''
-		print "DUT name: %c%c%c%c%c%c%c%c",
+'''		print "DUT name: %c%c%c%c%c%c%c%c",
 						 name0[31 : 24], name0[23 : 16], name0[15 : 8], name0[7 : 0],
 						 name1[31 : 24], name1[23 : 16], name1[15 : 8], name1[7 : 0]
 		print "DUT version: %c%c%c%c",
-						 version[31 : 24], version[23 : 16], version[15 : 8], version[7 : 0]
+						 version[31 : 24], version[23 : 16], version[15 : 8], version[7 : 0]'''
 		'''
 
 	##----------------------------------------------------------------
@@ -443,7 +444,7 @@ def tb_sha1():
 
 		#print "*** TC%01d - Double block test done.", tc_ctr
 		tc_ctr[:] = tc_ctr + 1;
-
+	'''
 
 	##----------------------------------------------------------------
 	## sha1_test
@@ -452,7 +453,59 @@ def tb_sha1():
 	## Test cases taken from:
 	## http:##csrc.nist.gov/groups/ST/toolkit/documents/Examples/SHA_All.pdf
 	##----------------------------------------------------------------
+	@instance
+	def check():
+		print "   -- Testbench for sha1 started --"
 
+		# Reset
+		init_sim()
+		tb_reset_n.next = 0;
+
+		# Wait 4 clock ticks
+		yield delay(4 * CLK_HALF_PERIOD)
+
+		# Un-enable reset
+		tb_reset_n.next = 1;
+
+		# Read version info from the DUT
+		name0 = intbv()[32:]
+		name1 = intbv()[32:]
+		version = intbv()[32:]
+
+		# Read Name 0
+		tb_address[:] = ADDR_NAME0
+		tb_cs = 1
+		tb_write_read = 0
+		yield delay(CLOCK_PERIOD)
+		name0[:] = tb_data_out
+		tb_cs = 0
+
+		# Read Name 1
+		tb_address[:] = ADDR_NAME1
+		tb_cs = 1
+		tb_write_read = 0
+		yield delay(CLOCK_PERIOD)
+		name1[:] = tb_data_out
+		tb_cs = 0
+
+		# Read Version Info
+		tb_address[:] = ADDR_VERSION
+		tb_cs = 1
+		tb_write_read = 0
+		yield delay(CLOCK_PERIOD)
+		version[:] = tb_data_out
+		tb_cs = 0
+
+		yield delay(CLOCK_PERIOD)
+
+		
+		print "DUT name: %c%c%c%c%c%c%c%c" % (name0[31 : 24], name0[23 : 16], name0[15 : 8], name0[7 : 0],
+						 					  name1[31 : 24], name1[23 : 16], name1[15 : 8], name1[7 : 0])
+		print "DUT version: %c%c%c%c" % (version[31 : 24], version[23 : 16], version[15 : 8], version[7 : 0])
+
+	return sha1, check, clk_gen, sys_monitor
+
+	'''
 	tc1 = intbv()[512:]
 	res1 = intbv()[160:]
 
@@ -460,7 +513,8 @@ def tb_sha1():
 	res2_1 = intbv()[160:]
 	tc2_2 = intbv()[512:]
 	res2_2 = intbv()[160:]
-
+	'''
+	'''
 	print "   -- Testbench for sha1 started --"
 
 	init_sim()
@@ -484,17 +538,16 @@ def tb_sha1():
 	print "*** Simulation done. ***"
 
 	return dut, reset_dut, clk_gen, sys_monitor 
-
+	'''
 ##======================================================================
 ## EOF tb_sha1.v
 ##======================================================================
 
 
-def bench():
-	tb = tb_sha1()
+def test_bench():
+	tb = bench()
 	sim = Simulation(tb)
 	sim.run()
-
 
 bench()
 
