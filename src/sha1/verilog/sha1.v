@@ -205,10 +205,11 @@ module sha1(
           else
             begin
               if ((address >= ADDR_BLOCK0) && (address <= ADDR_BLOCK15))
-                tmp_read_data = block_reg[address[3 : 0]];
+                tmp_read_data = block_reg[int(address[4:])];
 
               if ((address >= ADDR_DIGEST0) && (address <= ADDR_DIGEST4))
-                tmp_read_data = digest_reg[(4 - (address - ADDR_DIGEST0)) * 32 +: 32];
+                tmp_offset = (4 - (address - ADDR_DIGEST0)) * 32 - 32
+                tmp_read_data = digest_reg[(4 - (address - ADDR_DIGEST0)) * 32: tmp_offset];
 
               case (address)
                 // Read operations.

@@ -93,7 +93,7 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 			init_reg.next = 0
 			next_reg.next = 0
 			ready_reg.next = 0
-			digest_reg.next = 0
+			digest_reg.next[:] = 0
 			digest_valid_reg.next = 0
 
 			for i in range(16):
@@ -134,6 +134,12 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 					next_new.next = write_data[CTRL_NEXT_BIT];
 			# Read
 			else:
+				if ((address >= ADDR_BLOCK0) and (address <= ADDR_BLOCK15)):
+					tmp_read_data = block_reg[address[3 : 0]];
+
+				if ((address >= ADDR_DIGEST0) and (address <= ADDR_DIGEST4))
+					tmp_read_data = digest_reg[(4 - (address - ADDR_DIGEST0)) * 32 +: 32];
+
 				if address == ADDR_NAME0:
 					tmp_read_data.next[:] = CORE_NAME0
 				elif address == ADDR_NAME1:

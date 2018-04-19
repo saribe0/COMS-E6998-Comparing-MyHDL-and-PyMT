@@ -70,7 +70,7 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 
 		if not reset_n:
 			for i in range(16):
-				w_mem[i].next[:] = 0x0
+				w_mem[i].next[:] = 0
 			sha1_w_mem_ctrl_reg.next = CTRL_IDLE
 
 		else:
@@ -109,9 +109,9 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 		w_mem[8], w_mem[9], w_mem[10], w_mem[11], w_mem[12], w_mem[13], w_mem[14], w_mem[15])
 	def select_w():
 		if (w_ctr_reg < 16):
-			w_tmp.val[:] = w_mem[int(w_ctr_reg[3 : 0])]
+			w_tmp.next[:] = w_mem[int(w_ctr_reg[4:])]
 		else:
-			w_tmp.val[:] = w_new
+			w_tmp.next[:] = w_new
 
 
 	##----------------------------------------------------------------
@@ -132,22 +132,22 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 			w_13 = intbv()[32:]
 			w_16 = intbv()[32:]
 
-			w_mem00_new.next[:] = 0x0
-			w_mem01_new.next[:] = 0x0
-			w_mem02_new.next[:] = 0x0
-			w_mem03_new.next[:] = 0x0
-			w_mem04_new.next[:] = 0x0
-			w_mem05_new.next[:] = 0x0
-			w_mem06_new.next[:] = 0x0
-			w_mem07_new.next[:] = 0x0
-			w_mem08_new.next[:] = 0x0
-			w_mem09_new.next[:] = 0x0
-			w_mem10_new.next[:] = 0x0
-			w_mem11_new.next[:] = 0x0
-			w_mem12_new.next[:] = 0x0
-			w_mem13_new.next[:] = 0x0
-			w_mem14_new.next[:] = 0x0
-			w_mem15_new.next[:] = 0x0
+			w_mem00_new.next[:] = 0
+			w_mem01_new.next[:] = 0
+			w_mem02_new.next[:] = 0
+			w_mem03_new.next[:] = 0
+			w_mem04_new.next[:] = 0
+			w_mem05_new.next[:] = 0
+			w_mem06_new.next[:] = 0
+			w_mem07_new.next[:] = 0
+			w_mem08_new.next[:] = 0
+			w_mem09_new.next[:] = 0
+			w_mem10_new.next[:] = 0
+			w_mem11_new.next[:] = 0
+			w_mem12_new.next[:] = 0
+			w_mem13_new.next[:] = 0
+			w_mem14_new.next[:] = 0
+			w_mem15_new.next[:] = 0
 			w_mem_we.next  = 0
 
 			w_0[:]   = w_mem[0]
@@ -237,7 +237,7 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 				sha1_w_mem_ctrl_we.next  = 1
 				print 'should be init in mem fsm'
 
-		if sha1_w_mem_ctrl_reg == CTRL_UPDATE:
+		elif sha1_w_mem_ctrl_reg == CTRL_UPDATE:
 			if (next):
 				w_ctr_inc.next = 1
 			print 'Controller Update - %d' % next
