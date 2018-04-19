@@ -94,93 +94,9 @@ def bench():
 	@instance
 	def sys_monitor():
 		while True:
-			#if (DEBUG_CORE):
-			#	dump_core_state()
-
-			#if (DEBUG_TOP):
-			#	dump_top_state()
-
 			yield delay(CLK_PERIOD)
-
 			cycle_ctr.next[:] = cycle_ctr + 1
 
-
-	##----------------------------------------------------------------
-	## dump_top_state()
-	##
-	## Dump state of the the top of the dut.
-	##----------------------------------------------------------------------------
-	'''
-	def dump_top_state():
-		print "State of top"
-		print "-------------"
-		print "Inputs and outputs:"
-		print "cs      = 0x%x, we         = 0x%x" % (dut.cs, dut.we)
-		print "address = 0x%x, write_data = 0x%x" % (dut.address, dut.write_data)
-		print "error   = 0x%x, read_data  = 0x%x" % (dut.error, dut.read_data)
-		print ""
-
-		print "Control and status flags:"
-		print "init = 0x%x, next = 0x%x, ready = 0x%x" % (dut.init_reg, dut.next_reg, dut.ready_reg)
-		print ""
-
-		print "block registers:"
-		print "block0  = 0x%x, block1  = 0x%x, block2  = 0x%x,  block3  = 0x%x" % (dut.block_reg[0], dut.block_reg[1], dut.block_reg[2], dut.block_reg[3])
-		print "block4  = 0x%x, block5  = 0x%x, block6  = 0x%x,  block7  = 0x%x" % (dut.block_reg[4], dut.block_reg[5], dut.block_reg[6], dut.block_reg[7])
-		print "block8  = 0x%x, block9  = 0x%x, block10 = 0x%x,  block11 = 0x%x" % (dut.block_reg[8], dut.block_reg[9], dut.block_reg[10], dut.block_reg[11])
-		print "block12 = 0x%x, block13 = 0x%x, block14 = 0x%x,  block15 = 0x%x" % (dut.block_reg[12], dut.block_reg[13], dut.block_reg[14], dut.block_reg[15])
-		print ""
-
-		print "Digest registers:"
-		print "digest_reg  = 0x%x" % dut.digest_reg
-		print ""
-	'''
-	##----------------------------------------------------------------
-	## dump_core_state()
-	##
-	## Dump the state of the core inside the dut.
-	##----------------------------------------------------------------------------UNSURE TODO: FIX 
-	'''
-	@instance
-	def dump_core_state():
-		print "State of core"
-		print "-------------"
-		print "Inputs and outputs:"
-		print "init   = 0x%01x, next  = 0x%01x",
-		dut.core.init, dut.core.next
-		print "block  = 0x%0128x", dut.core.block
-
-		print "ready  = 0x%01x, valid = 0x%01x",
-		dut.core.ready, dut.core.digest_valid
-		print "digest = 0x%040x", dut.core.digest
-		print "H0_reg = 0x%08x, H1_reg = 0x%08x, H2_reg = 0x%08x, H3_reg = 0x%08x, H4_reg = 0x%08x",
-		dut.core.H0_reg, dut.core.H1_reg, dut.core.H2_reg, dut.core.H3_reg, dut.core.H4_reg
-		print ""
-
-		print "Control signals and counter:"
-		print "sha1_ctrl_reg = 0x%01x", dut.core.sha1_ctrl_reg
-		print "digest_init   = 0x%01x, digest_update = 0x%01x",
-		dut.core.digest_init, dut.core.digest_update
-		print "state_init    = 0x%01x, state_update  = 0x%01x",
-		dut.core.state_init, dut.core.state_update
-		print "first_block   = 0x%01x, ready_flag    = 0x%01x, w_init        = 0x%01x",
-		dut.core.first_block, dut.core.ready_flag, dut.core.w_init
-		print "round_ctr_inc = 0x%01x, round_ctr_rst = 0x%01x, round_ctr_reg = 0x%02x",
-		dut.core.round_ctr_inc, dut.core.round_ctr_rst, dut.core.round_ctr_reg
-		print ""
-
-		print "State registers:"
-		print "a_reg = 0x%08x, b_reg = 0x%08x, c_reg = 0x%08x, d_reg = 0x%08x, e_reg = 0x%08x",
-		dut.core.a_reg, dut.core.b_reg, dut.core.c_reg, dut.core.d_reg,  dut.core.e_reg
-		print "a_new = 0x%08x, b_new = 0x%08x, c_new = 0x%08x, d_new = 0x%08x, e_new = 0x%08x",
-		dut.core.a_new, dut.core.b_new, dut.core.c_new, dut.core.d_new, dut.core.e_new
-		print ""
-
-		print "State update values:"
-		print "f = 0x%08x, k = 0x%08x, t = 0x%08x, w = 0x%08x,",
-		dut.core.state_logic.f, dut.core.state_logic.k, dut.core.state_logic.t, dut.core.w
-		print ""
-	'''
 
 
 	##----------------------------------------------------------------
@@ -236,11 +152,8 @@ def bench():
 	##----------------------------------------------------------------
 	def wait_ready():
 		read_data.val[:] = 0
-		count = 0
 
 		while read_data == 0:
-			#while count < 30:
-			count += 1
 			yield read_word(ADDR_STATUS)
 
 	
@@ -356,7 +269,7 @@ def bench():
 		digest_data.next[64  :  32] = read_data;
 		yield read_word(ADDR_DIGEST4)
 		digest_data.next[32  :   0] = read_data;
-		yield delay(CLK_PERIOD)
+		#yield delay(CLK_PERIOD)
 
 
 	##----------------------------------------------------------------
@@ -482,6 +395,7 @@ def bench():
         	yield double_block_test(tc2_1, res2_1, tc2_2, res2_2)
 		
                 # Display results and finish up
+		yield delay(CLK_PERIOD)
 		display_test_result()
 		print "*** Simulation done. ***"
 
