@@ -65,6 +65,7 @@ def tb_sha1():
 	tb_address 		= Signal(intbv(0)[8:]) 	# reg [7 : 0]   tb_address;
 	tb_data_in		= Signal(intbv(0)[32:]) 	# reg [31 : 0]  tb_data_in;
 	tb_data_out 	= Signal(intbv(0)[32:]) 	# wire [31 : 0] tb_data_out;
+	tb_error 	= Signal(bool())
 
 	read_data	= Signal(intbv(0)[32:]) 	# reg [31 : 0]  read_data;
 	digest_data = Signal(intbv(0)[160:]) 	# reg [159 : 0] digest_data;
@@ -101,7 +102,7 @@ def tb_sha1():
 
 			yield delay(CLOCK_PERIOD)
 
-			cycle_ctr[:] = cycle_ctr + 1
+			cycle_ctr.next[:] = cycle_ctr + 1
 
 
 	##----------------------------------------------------------------
@@ -194,11 +195,9 @@ def tb_sha1():
 	##----------------------------------------------------------------
 	@instance
 	def reset_dut():
-
-		#print "*** Toggle reset."
-		tb_reset_n = 0;
+		tb_reset_n.next = 0;
 		yield delay(4 * CLK_HALF_PERIOD)
-		tb_reset_n = 1;
+		tb_reset_n.next = 1;
 
 
 	##----------------------------------------------------------------
@@ -206,19 +205,18 @@ def tb_sha1():
 	##
 	## Initialize all counters and testbed functionality as well
 	## as setting the DUT inputs to defined values.
-	##----------------------------------------------------------------
-	@instance
+	##---------------------------------------------------------------
 	def init_sim():
-		cycle_ctr[:] = 0
-		error_ctr[:] = 0
-		tc_ctr[:] 	 = 0
+		cycle_ctr.next[:] = 0
+		error_ctr.next[:] = 0
+		tc_ctr.next[:] 	  = 0
 
-		tb_clk 			= 0
-		tb_reset_n 		= 0
-		tb_cs 			= 0
-		tb_write_read 	= 0
-		tb_address[:]	= 0
-		tb_data_in[:]	= 0
+		tb_clk.next  	  = 0
+		tb_reset_n.next	  = 0
+		tb_cs.next   	  = 0
+		tb_write_read.next	= 0
+		tb_address.next[:]	= 0
+		tb_data_in.next[:]	= 0
 
 
 	##----------------------------------------------------------------
@@ -226,15 +224,13 @@ def tb_sha1():
 	##
 	## Display the accumulated test results.
 	##----------------------------------------------------------------
-	'''
-	@instance
 	def display_test_result():
 		if (error_ctr == 0):
-			print "*** All %02d test cases completed successfully.", tc_ctr
+			print "*** All %d test cases completed successfully." % int(tc_ctr)
 		else:
-			print "*** %02d test cases completed.", tc_ctr
-			print "*** %02d errors detected during testing.", error_ctr
-	'''
+			print "*** %d test cases completed." % int(tc_ctr)
+			print "*** %d errors detected during testing." % int(error_ctr)
+	
 
 
 	##----------------------------------------------------------------
@@ -247,9 +243,8 @@ def tb_sha1():
 	## when the dut is actively processing and will in fact at some
 	## point set the flag.
 	##----------------------------------------------------------------
-	@instance
 	def wait_ready():
-		read_data =0
+		read_data.next[:] =0
 
 		while read_data == 0:
 			read_word(ADDR_STATUS)
@@ -262,7 +257,6 @@ def tb_sha1():
 	## the word read will be available in the global variable
 	## read_data.
 	##----------------------------------------------------------------
-	@instance
 	def read_word(address):
 		tb_address[:] = address
 		tb_cs = 1
@@ -284,7 +278,6 @@ def tb_sha1():
 	##
 	## Write the given word to the DUT using the DUT interface.
 	##----------------------------------------------------------------
-	@instance
 	def write_word(address, word):
 		'''
 		if DEBUG_TOP:
@@ -307,7 +300,6 @@ def tb_sha1():
 	##
 	## Write the given block to the dut.
 	##----------------------------------------------------------------
-	@instance
 	def write_block(block):
 		write_word(ADDR_BLOCK0,  block[512 : 480])
 		write_word(ADDR_BLOCK1,  block[480 : 448])
@@ -332,7 +324,6 @@ def tb_sha1():
 	##
 	## Read the name and version from the DUT.
 	##----------------------------------------------------------------
-	@instance
 	def check_name_version():
 		name0 = intbv()[32:]
 		name1 = intbv()[32:]
@@ -359,7 +350,6 @@ def tb_sha1():
 	## Read the digest in the dut. The resulting digest will be
 	## available in the global variable digest_data.
 	##----------------------------------------------------------------
-	@instance
 	def read_digest():
 
 		read_word(ADDR_DIGEST0)
@@ -380,7 +370,6 @@ def tb_sha1():
 	##
 	## Perform test of a single block digest.
 	##----------------------------------------------------------------
-	@instance
 	def single_block_test(block, expected):
 		# print "*** TC%01d - Single block test started.", tc_ctr
 
@@ -412,7 +401,6 @@ def tb_sha1():
 	## Perform test of a double block digest. Note that we check
 	## the digests for both the first and final block.
 	##----------------------------------------------------------------
-	@instance
 	def double_block_test(block0, expected0, block1, expected1):
 
 		# print "*** TC%01d - Double block test started.", tc_ctr
@@ -465,18 +453,17 @@ def tb_sha1():
 	## http:##csrc.nist.gov/groups/ST/toolkit/documents/Examples/SHA_All.pdf
 	##----------------------------------------------------------------
 
-	tcl = intbv()[512:]
+	tc1 = intbv()[512:]
 	res1 = intbv()[160:]
 
 	tc2_1 = intbv()[512:]
 	res2_1 = intbv()[160:]
-	tc2_1 = intbv()[512:]
+	tc2_2 = intbv()[512:]
 	res2_2 = intbv()[160:]
 
 	print "   -- Testbench for sha1 started --"
 
 	init_sim()
-	reset_dut()
 	check_name_version()
 
 	## TC1: Single block message: "abc".
@@ -496,17 +483,20 @@ def tb_sha1():
 	display_test_result()
 	print "*** Simulation done. ***"
 
-	return
+	return dut, reset_dut, clk_gen, sys_monitor 
 
 ##======================================================================
 ## EOF tb_sha1.v
 ##======================================================================
 
 
+def bench():
+	tb = tb_sha1()
+	sim = Simulation(tb)
+	sim.run()
 
 
-
-
+bench()
 
 
 

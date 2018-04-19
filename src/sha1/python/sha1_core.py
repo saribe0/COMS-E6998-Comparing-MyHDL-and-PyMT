@@ -1,4 +1,5 @@
 from myhdl import *
+from sha1_w_mem import sha1_w_mem
 
 def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 
@@ -77,7 +78,7 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	##----------------------------------------------------------------
 	## Module instantiantions.
 	##----------------------------------------------------------------
-	sha1_w_mem = w_mem_inst(clk, reset_n, block, w_init, w_next, w)
+	w_mem_inst = sha1_w_mem(clk, reset_n, block, w_init, w_next, w)
 
 
 	##----------------------------------------------------------------
@@ -172,7 +173,7 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	## The logic needed to init as well as update the state during
 	## round processing.
 	##----------------------------------------------------------------
-	@always(a5, f, k, t, a_new, b_new, c_new, d_new, e_new, a_e_we, state_update, round_ctr_reg, a_reg, b_reg, c_reg, d_reg)
+	@always(a_new, b_new, c_new, d_new, e_new, a_e_we, state_update, round_ctr_reg, a_reg, b_reg, c_reg, d_reg)
 	def state_logic():
 		a5 = Signal(intbv(0)[32:])
 		f  = Signal(intbv(0)[32:])
@@ -206,13 +207,13 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 			if round_ctr_reg <= 19:
 				k[:] = 0x5a827999
 				f[:] =  ((b_reg & c_reg) ^ (~b_reg & d_reg))
-			else if ((round_ctr_reg >= 20) && (round_ctr_reg <= 39)):
+			elif ((round_ctr_reg >= 20) and (round_ctr_reg <= 39)):
 				k[:] = 0x6ed9eba1
 				f[:] = b_reg ^ c_reg ^ d_reg
-			else if ((round_ctr_reg >= 40) && (round_ctr_reg <= 59)):
+			elif ((round_ctr_reg >= 40) and (round_ctr_reg <= 59)):
 				k[:] = 0x8f1bbcdc
 				f[:] = ((b_reg | c_reg) ^ (b_reg | d_reg) ^ (c_reg | d_reg))
-			else if round_ctr_reg >= 60:
+			elif round_ctr_reg >= 60:
 				k[:] = 0xca62c1d6
 				f[:] = b_reg ^ c_reg ^ d_reg
 
@@ -238,11 +239,11 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 		round_ctr_new[:] = 0
 		round_ctr_we[:]  = 0
 
-		if (round_ctr_rst)
+		if (round_ctr_rst):
 			round_ctr_new[:] = 0
 			round_ctr_we[:]  = 1
 
-		if (round_ctr_inc)
+		if (round_ctr_inc):
 			round_ctr_new[:] = round_ctr_reg + 1
 			round_ctr_we[:]  = 1
 

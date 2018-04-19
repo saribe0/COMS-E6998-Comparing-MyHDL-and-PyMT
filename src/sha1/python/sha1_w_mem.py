@@ -1,6 +1,6 @@
+from myhdl import *
 
-
-def sha1_w_mem(clk, reset_n, block, init, next):
+def sha1_w_mem(clk, reset_n, block, init, next, w):
 
 	##----------------------------------------------------------------
 	## Internal constant and parameter definitions.
@@ -68,23 +68,23 @@ def sha1_w_mem(clk, reset_n, block, init, next):
 	@always(clk.posedge or reset_n.negedge)
 	def reg_update():
 
-		if (!reset_n):
+		if (not reset_n):
 			for i in range(16):
 				w_mem[i].next = 0x0
 			sha1_w_mem_ctrl_reg.next = CTRL_IDLE
 
-		else
+		else:
 			if (w_mem_we):
-				w_mem[00].next <= w_mem00_new
-				w_mem[01].next <= w_mem01_new
-				w_mem[02].next <= w_mem02_new
-				w_mem[03].next <= w_mem03_new
-				w_mem[04].next <= w_mem04_new
-				w_mem[05].next <= w_mem05_new
-				w_mem[06].next <= w_mem06_new
-				w_mem[07].next <= w_mem07_new
-				w_mem[08].next <= w_mem08_new
-				w_mem[09].next <= w_mem09_new
+				w_mem[0].next <= w_mem00_new
+				w_mem[1].next <= w_mem01_new
+				w_mem[2].next <= w_mem02_new
+				w_mem[3].next <= w_mem03_new
+				w_mem[4].next <= w_mem04_new
+				w_mem[5].next <= w_mem05_new
+				w_mem[6].next <= w_mem06_new
+				w_mem[7].next <= w_mem07_new
+				w_mem[8].next <= w_mem08_new
+				w_mem[9].next <= w_mem09_new
 				w_mem[10].next <= w_mem10_new
 				w_mem[11].next <= w_mem11_new
 				w_mem[12].next <= w_mem12_new
@@ -105,11 +105,12 @@ def sha1_w_mem(clk, reset_n, block, init, next):
 	## W word selection logic. Returns either directly from the
 	## memory or the next w value calculated.
 	##----------------------------------------------------------------
-	@always(w_ctr_reg, w_tmp, w_mem, w_new)
+	@always(w_ctr_reg, w_tmp, w_new, w_mem[0], w_mem[1], w_mem[2], w_mem[3], w_mem[4], w_mem[5], w_mem[6], w_mem[7], 
+		w_mem[8], w_mem[9], w_mem[10], w_mem[11], w_mem[12], w_mem[13], w_mem[14], w_mem[15])
 	def select_w():
-		if (w_ctr_reg < 16)
+		if (w_ctr_reg < 16):
 			w_tmp[:] = w_mem[int(w_ctr_reg[3 : 0])]
-		else
+		else:
 			w_tmp[:] = w_new
 
 
@@ -119,9 +120,11 @@ def sha1_w_mem(clk, reset_n, block, init, next):
 	## Update logic for the W memory. This is where the scheduling
 	## based on a sliding window is implemented.
 	##----------------------------------------------------------------
-	@always(w_0, w_2, w_8, w_13, w_16, w_mem00_new, w_mem01_new, w_mem02_new, w_mem03_new, w_mem04_new,
+	@always(w_mem00_new, w_mem01_new, w_mem02_new, w_mem03_new, w_mem04_new,
 			w_mem05_new, w_mem06_new, w_mem07_new, w_mem08_new, w_mem09_new, w_mem10_new, w_mem11_new, 
-			w_mem12_new, w_mem13_new, w_mem14_new, w_mem15_new, w_mem_we, w_mem, w_new, init, block, w_ctr_reg)
+			w_mem12_new, w_mem13_new, w_mem14_new, w_mem15_new, w_mem_we, w_new, init, block, w_ctr_reg,
+			w_mem[0], w_mem[1], w_mem[2], w_mem[3], w_mem[4], w_mem[5], w_mem[6], w_mem[7],
+	                w_mem[8], w_mem[9], w_mem[10], w_mem[11], w_mem[12], w_mem[13], w_mem[14], w_mem[15])
 	def w_mem_update_logic():
 			w_0 = intbv()[32:]
 			w_2 = intbv()[32:]
@@ -129,22 +132,22 @@ def sha1_w_mem(clk, reset_n, block, init, next):
 			w_13 = intbv()[32:]
 			w_16 = intbv()[32:]
 
-			w_mem00_new[:] = 32 0x0
-			w_mem01_new[:] = 32 0x0
-			w_mem02_new[:] = 32 0x0
-			w_mem03_new[:] = 32 0x0
-			w_mem04_new[:] = 32 0x0
-			w_mem05_new[:] = 32 0x0
-			w_mem06_new[:] = 32 0x0
-			w_mem07_new[:] = 32 0x0
-			w_mem08_new[:] = 32 0x0
-			w_mem09_new[:] = 32 0x0
-			w_mem10_new[:] = 32 0x0
-			w_mem11_new[:] = 32 0x0
-			w_mem12_new[:] = 32 0x0
-			w_mem13_new[:] = 32 0x0
-			w_mem14_new[:] = 32 0x0
-			w_mem15_new[:] = 32 0x0
+			w_mem00_new[:] = 0x0
+			w_mem01_new[:] = 0x0
+			w_mem02_new[:] = 0x0
+			w_mem03_new[:] = 0x0
+			w_mem04_new[:] = 0x0
+			w_mem05_new[:] = 0x0
+			w_mem06_new[:] = 0x0
+			w_mem07_new[:] = 0x0
+			w_mem08_new[:] = 0x0
+			w_mem09_new[:] = 0x0
+			w_mem10_new[:] = 0x0
+			w_mem11_new[:] = 0x0
+			w_mem12_new[:] = 0x0
+			w_mem13_new[:] = 0x0
+			w_mem14_new[:] = 0x0
+			w_mem15_new[:] = 0x0
 			w_mem_we[:]    = 0
 
 			w_0[:]   = w_mem[0]
@@ -173,7 +176,7 @@ def sha1_w_mem(clk, reset_n, block, init, next):
 					w_mem15_new[:] = block[31  :   0]
 					w_mem_we[:]    = 1
 
-			else if (w_ctr_reg > 15):
+			elif (w_ctr_reg > 15):
 					w_mem00_new[:] = w_mem[1]
 					w_mem01_new[:] = w_mem[2]
 					w_mem02_new[:] = w_mem[3]

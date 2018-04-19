@@ -1,5 +1,5 @@
 from myhdl import *
-from sha1_core import core
+from sha1_core import sha1_core
 
 
 def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
@@ -77,7 +77,7 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 	##----------------------------------------------------------------
 	## core instantiation.
 	##----------------------------------------------------------------
-	sha1_core = core(clk, reset_n, init_reg, next_reg, core_block, core_ready, core_digest, core_digest_valid)
+	core = sha1_core(clk, reset_n, init_reg, next_reg, core_block, core_ready, core_digest, core_digest_valid)
 
 
 	##----------------------------------------------------------------
