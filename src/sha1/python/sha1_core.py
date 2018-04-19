@@ -6,11 +6,11 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	##----------------------------------------------------------------
 	## Internal constant and definitions.
 	##----------------------------------------------------------------
-	H0_0 = intbv(1732584193)[32:] 	# 320x67452301
-	H0_1 = intbv(4023233417)[32:] 	# 320xefcdab89
-	H0_2 = intbv(2562383102)[32:] 	# 320x98badcfe
-	H0_3 = intbv(271733878)[32:] 	# 320x10325476
-	H0_4 = intbv(3285377520)[32:] 	# 320xc3d2e1f0
+	H0_0 = 0x67452301 	# intbv(1732584193)[32:] 	# 320x67452301
+	H0_1 = 0xefcdab89 	# intbv(4023233417)[32:] 	# 320xefcdab89
+	H0_2 = 0x98badcfe 	# intbv(2562383102)[32:] 	# 320x98badcfe
+	H0_3 = 0x10325476 	# intbv(271733878)[32:] 	# 320x10325476
+	H0_4 = 0xc3d2e1f0  	# intbv(3285377520)[32:] 	# 320xc3d2e1f0
 
 	SHA1_ROUNDS = 79
 
@@ -46,8 +46,8 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	H4_new	= Signal(modbv()[32:])	
 	H_we	= Signal(bool())
 
-	round_ctr_reg = Signal(intbv()[7:])
-	round_ctr_new = Signal(intbv()[7:])
+	round_ctr_reg = Signal(modbv()[7:])
+	round_ctr_new = Signal(modbv()[7:])
 	round_ctr_we  = Signal(bool())
 	round_ctr_inc = Signal(bool())
 	round_ctr_rst = Signal(bool())
@@ -178,7 +178,7 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	## round processing.
 	##----------------------------------------------------------------
 	@always(a_new, b_new, c_new, d_new, e_new, a_e_we, state_init, first_block, H0_reg, H1_reg, H2_reg, 
-		H3_reg, H4_reg, round_ctr_reg, a_reg, b_reg, c_reg, d_reg, state_update)
+		H3_reg, H4_reg, round_ctr_reg, a_reg, b_reg, c_reg, d_reg, e_reg, w, state_update)
 	def state_logic():
 		a5 = modbv(0)[32:]
 		f  = modbv(0)[32:]
@@ -251,7 +251,7 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 			round_ctr_we.next  = 1
 
 		if (round_ctr_inc):
-			round_ctr_new.next[:] = round_ctr_reg + 1
+			round_ctr_new.next[:] = round_ctr_reg + 0b1
 			round_ctr_we.next  = 1
 
 
@@ -316,6 +316,9 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 				digest_valid_we.next   = 1
 				sha1_ctrl_new.next[:]     = CTRL_IDLE
 				sha1_ctrl_we.next      = 1
+
+		else:
+			pass
 
 	return w_mem_inst, logic, reg_update, digest_logic, state_logic, round_ctr, sha1_ctrl_fsm
 

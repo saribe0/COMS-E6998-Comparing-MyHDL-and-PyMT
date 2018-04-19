@@ -49,15 +49,24 @@ sim-gui: sim-compile
 	vsim $(SIMTOP)
 
 sim: sim-compile
-	vsim -c $(SIMTOP)
+	vsim -c -do "run -a" $(SIMTOP) | tee sim.out
 
 syn:
 	BUILD_PATH=$(SYN_PATH) TOP=$(TOP) NUM_PROCESSORS=$(NUM_PROCESSORS) FAMILY=$(FAMILY) quartus_sh -t $(SCRIPTS_PATH)/q_syn.tcl
 
 clean:
-	-rm *~
-	-rm modelsim.ini
-	-rm transcript
-	-rm $(SOURCE_PATH)/*~
-	-rm -rf $(SYN_PATH)
-	-rm -rf $(SIM_PATH)
+	@echo "rm *~"
+	-@rm *~ 2>/dev/null || true
+	@echo "rm modelsim.ini"
+	-@rm modelsim.ini 2>/dev/null || true
+	@echo "rm transcript"
+	-@rm transcript 2>/dev/null || true
+	@echo "rm $(SOURCE_PATH)/*~"
+	-@rm $(SOURCE_PATH)/*~ 2>/dev/null || true
+	@echo "rm -rf $(SYN_PATH)"
+	-@rm -rf $(SYN_PATH) 2>/dev/null || true
+	@echo "rm -rf $(SIM_PATH)"
+	-@rm -rf $(SIM_PATH) 2>/dev/null || true
+	@echo "rm *.out"
+	-@rm *.out 2>/dev/null || true
+

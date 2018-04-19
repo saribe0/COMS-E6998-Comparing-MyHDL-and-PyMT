@@ -7,27 +7,27 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 	##----------------------------------------------------------------
 	## Internal constant and parameter definitions.
 	##----------------------------------------------------------------
-	ADDR_NAME0       = intbv(0)[8:] # 8'h00;
-	ADDR_NAME1       = intbv(1)[8:] # 8'h01;
-	ADDR_VERSION     = intbv(2)[8:] # 8'h02;
+	ADDR_NAME0       = 0x00  #intbv(0)[8:] # 8'h00;
+	ADDR_NAME1       = 0x01  #intbv(1)[8:] # 8'h01;
+	ADDR_VERSION     = 0x02  #intbv(2)[8:] # 8'h02;
 
-	ADDR_CTRL        = intbv(8)[8:] # 8'h08;
+	ADDR_CTRL        = 0x08  #intbv(8)[8:] # 8'h08;
 	CTRL_INIT_BIT    = 0
 	CTRL_NEXT_BIT    = 1
 
-	ADDR_STATUS      = intbv(9)[8:] # 8'h09;
+	ADDR_STATUS      = 0x09  #intbv(9)[8:] # 8'h09;
 	STATUS_READY_BIT = 0
 	STATUS_VALID_BIT = 1
 
-	ADDR_BLOCK0    = intbv(16)[8:] # 8'h10;
-	ADDR_BLOCK15   = intbv(31)[8:] # 8'h1f;
+	ADDR_BLOCK0    = 0x10    #intbv(16)[8:] # 8'h10;
+	ADDR_BLOCK15   = 0x1f    #intbv(31)[8:] # 8'h1f;
 
-	ADDR_DIGEST0   = intbv(32)[8:] # 8'h20;
-	ADDR_DIGEST4   = intbv(36)[8:] # 8'h24;
+	ADDR_DIGEST0   = 0x20    #intbv(32)[8:] # 8'h20;
+	ADDR_DIGEST4   = 0x24    #intbv(36)[8:] # 8'h24;
 
-	CORE_NAME0     = intbv(1936220465)[32:] # 32'h73686131; ## "sha1"
-	CORE_NAME1     = intbv(538976288)[32:]  # 32'h20202020; ## "    "
-	CORE_VERSION   = intbv(808334896)[32:]  # 32'h302e3630; ## "0.60"
+	CORE_NAME0     = 0x73686131  #intbv(1936220465)[32:] # 32'h73686131; ## "sha1"
+	CORE_NAME1     = 0x20202020  #intbv(538976288)[32:]  # 32'h20202020; ## "    "
+	CORE_VERSION   = 0x302e3630  #intbv(808334896)[32:]  # 32'h302e3630; ## "0.60"
 
 
 	##----------------------------------------------------------------
@@ -81,7 +81,7 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 		core_block.next[128: 96] = block_reg[12]
 		core_block.next[96 : 64] = block_reg[13]
 		core_block.next[64 : 32] = block_reg[14]
-		core_block.next[32 :  0] = block_reg[15])
+		core_block.next[32 :  0] = block_reg[15]
 		read_data.next[:] = tmp_read_data
 		error.next = tmp_error
 
@@ -150,7 +150,7 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 			# Read
 			else:
 				if ((address >= ADDR_BLOCK0) and (address <= ADDR_BLOCK15)):
-					tmp_read_data.next[:] = block_reg[address[3 : 0]];
+					tmp_read_data.next[:] = block_reg[address[4 : 0]];
 				if ((address >= ADDR_DIGEST0) and (address <= ADDR_DIGEST4)):
 					if (address == 0x20):
 						tmp_read_data.next[:] = digest_reg[160:128]

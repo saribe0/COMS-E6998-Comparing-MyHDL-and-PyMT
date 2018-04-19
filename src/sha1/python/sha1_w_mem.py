@@ -7,8 +7,8 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	##----------------------------------------------------------------
 	SHA1_ROUNDS = 79
 
-	CTRL_IDLE   = intbv(0)[1:]
-	CTRL_UPDATE = intbv(1)[1:]
+	CTRL_IDLE   = 0b0 # intbv(0)[1:]
+	CTRL_UPDATE = 0b1 # intbv(1)[1:]
 
 	##----------------------------------------------------------------
 	## Registers including update variables and write enable.
@@ -32,8 +32,8 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	w_mem15_new = Signal(intbv()[32:])
 	w_mem_we    = Signal(bool())
 
-	w_ctr_reg = Signal(intbv()[7:])
-	w_ctr_new = Signal(intbv()[7:])
+	w_ctr_reg = Signal(modbv()[7:])
+	w_ctr_new = Signal(modbv()[7:])
 	w_ctr_we  = Signal(bool())
 	w_ctr_inc = Signal(bool())
 	w_ctr_rst = Signal(bool())
@@ -215,7 +215,7 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 			w_ctr_new.next[:] = w_ctr_reg + 1
 			w_ctr_we.next  = 1
 
-
+	
 	##----------------------------------------------------------------
 	## sha1_w_mem_fsm
 	##
@@ -239,7 +239,9 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 			if (w_ctr_reg == SHA1_ROUNDS):
 				sha1_w_mem_ctrl_new.next = CTRL_IDLE
 				sha1_w_mem_ctrl_we.next  = 1
-
+		else:
+			pass
+	
 	return logic, reg_update, select_w, w_mem_update_logic, w_ctr, sha1_w_mem_fsm
 
 ##======================================================================
