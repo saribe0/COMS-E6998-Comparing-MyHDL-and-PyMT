@@ -139,7 +139,7 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 				if ((address >= ADDR_BLOCK0) and (address <= ADDR_BLOCK15)):
 					tmp_read_data.next[:] = block_reg[address[3 : 0]];
 				if ((address >= ADDR_DIGEST0) and (address <= ADDR_DIGEST4)):
-					tmp_offset = (4 - (address - ADDR_DIGEST0)) * 32 + 32
+					tmp_offset = intbv((4 - (address - ADDR_DIGEST0)) * 32 + 32, min=0, max=159)
 					tmp_read_data.next[:] = digest_reg[tmp_offset : (4 - (address - ADDR_DIGEST0)) * 32];
 
 				if address == ADDR_NAME0:

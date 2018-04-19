@@ -7,8 +7,8 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	##----------------------------------------------------------------
 	SHA1_ROUNDS = 79
 
-	CTRL_IDLE   = intbv(0)
-	CTRL_UPDATE = intbv(1)
+	CTRL_IDLE   = intbv(0)[1:]
+	CTRL_UPDATE = intbv(1)[1:]
 
 	##----------------------------------------------------------------
 	## Registers including update variables and write enable.

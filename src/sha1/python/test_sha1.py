@@ -75,7 +75,7 @@ def bench():
 	## Device Under Test.
 	##----------------------------------------------------------------
 	
-	# dut = sha1(tb_clk, tb_reset_n, tb_cs, tb_write_read, tb_address, tb_data_in, tb_data_out, tb_error)
+	#dut = sha1(tb_clk, tb_reset_n, tb_cs, tb_write_read, tb_address, tb_data_in, tb_data_out, tb_error)
 
 	dut = toVerilog(sha1, tb_clk, tb_reset_n, tb_cs, tb_write_read, tb_address, tb_data_in, tb_data_out, tb_error)
 	
