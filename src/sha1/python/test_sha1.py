@@ -75,7 +75,9 @@ def bench():
 	## Device Under Test.
 	##----------------------------------------------------------------
 	
-	dut = sha1(tb_clk, tb_reset_n, tb_cs, tb_write_read, tb_address, tb_data_in, tb_data_out, tb_error)
+	# dut = sha1(tb_clk, tb_reset_n, tb_cs, tb_write_read, tb_address, tb_data_in, tb_data_out, tb_error)
+
+	dut = toVerilog(sha1, tb_clk, tb_reset_n, tb_cs, tb_write_read, tb_address, tb_data_in, tb_data_out, tb_error)
 	
 	##----------------------------------------------------------------
 	## clk_gen
@@ -404,41 +406,7 @@ def bench():
 
 	return dut, check, clk_gen, sys_monitor
 
-	'''
-	tc1 = intbv()[512:]
-	res1 = intbv()[160:]
-
-	tc2_1 = intbv()[512:]
-	res2_1 = intbv()[160:]
-	tc2_2 = intbv()[512:]
-	res2_2 = intbv()[160:]
-	
-	
-	print "   -- Testbench for sha1 started --"
-
-	init_sim()
-	check_name_version()
-
-	## TC1: Single block message: "abc".
-	tc1[:] = 5100431258107249700168418948414140220579695416282740287258808047360864048991964757897370917042356648128214697817844060110735030706394180882420833873559576
-	res1[:] = 968236873715988614170569073515315707566766479517
-	single_block_test(tc1, res1)
-
-	## TC2: Double block message.
-	## "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"
-	tc2_1[:] = 5100431171898069115163634243358666473761008276522498094073997421077178130866117634074596662252782114592477252990350509598466861911873471821407367712473088
-	res2_1[:] = 1393894845993310694499304876646646237122520311154
-
-	tc2_2[:] = 448
-	res2_2[:] = 756981919157381189150916787291668349464288325873
-	double_block_test(tc2_1, res2_1, tc2_2, res2_2)
-
-	display_test_result()
-	print "*** Simulation done. ***"
-
-	return dut, reset_dut, clk_gen, sys_monitor 
-	'''
-##======================================================================
+#======================================================================
 ## EOF tb_sha1.v
 ##======================================================================
 
@@ -448,8 +416,9 @@ def test_bench():
 	sim = Simulation(tb)
 	sim.run()
 
-#test_bench()
-
+#tb = traceSignals(bench)
+#sim = Simulation(tb)
+#sim.run()
 
 
 
