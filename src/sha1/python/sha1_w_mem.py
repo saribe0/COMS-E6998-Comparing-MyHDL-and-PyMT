@@ -13,7 +13,7 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	##----------------------------------------------------------------
 	## Registers including update variables and write enable.
 	##----------------------------------------------------------------
-	w_mem = [Signal(intbv()[32:])] * 16
+	w_mem = [Signal(intbv()[32:]) for n in range(16)]
 	w_mem00_new = Signal(intbv()[32:])
 	w_mem01_new = Signal(intbv()[32:])
 	w_mem02_new = Signal(intbv()[32:])
@@ -75,22 +75,23 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 
 		else:
 			if (w_mem_we):
-				w_mem[0].next[:] <= w_mem00_new
-				w_mem[1].next[:] <= w_mem01_new
-				w_mem[2].next[:] <= w_mem02_new
-				w_mem[3].next[:] <= w_mem03_new
-				w_mem[4].next[:] <= w_mem04_new
-				w_mem[5].next[:] <= w_mem05_new
-				w_mem[6].next[:] <= w_mem06_new
-				w_mem[7].next[:] <= w_mem07_new
-				w_mem[8].next[:] <= w_mem08_new
-				w_mem[9].next[:] <= w_mem09_new
-				w_mem[10].next[:] <= w_mem10_new
-				w_mem[11].next[:] <= w_mem11_new
-				w_mem[12].next[:] <= w_mem12_new
-				w_mem[13].next[:] <= w_mem13_new
-				w_mem[14].next[:] <= w_mem14_new
-				w_mem[15].next[:] <= w_mem15_new
+				print '================================== %x, %x' % (w_mem00_new, w_mem15_new)
+				w_mem[0].next[:] = w_mem00_new
+				w_mem[1].next[:] = w_mem01_new
+				w_mem[2].next[:] = w_mem02_new
+				w_mem[3].next[:] = w_mem03_new
+				w_mem[4].next[:] = w_mem04_new
+				w_mem[5].next[:] = w_mem05_new
+				w_mem[6].next[:] = w_mem06_new
+				w_mem[7].next[:] = w_mem07_new
+				w_mem[8].next[:] = w_mem08_new
+				w_mem[9].next[:] = w_mem09_new
+				w_mem[10].next[:] = w_mem10_new
+				w_mem[11].next[:] = w_mem11_new
+				w_mem[12].next[:] = w_mem12_new
+				w_mem[13].next[:] = w_mem13_new
+				w_mem[14].next[:] = w_mem14_new
+				w_mem[15].next[:] = w_mem15_new
 
 			if (w_ctr_we):
 				w_ctr_reg.next[:] = w_ctr_new
@@ -98,6 +99,7 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 			if (sha1_w_mem_ctrl_we):
 				sha1_w_mem_ctrl_reg.next = sha1_w_mem_ctrl_new
 
+			print 'Memories: %x %x %x %x %x %x' % (w_mem[0], w_mem[1], w_mem[2], w_mem[3], w_mem[4], w_mem[5])
 
 	##----------------------------------------------------------------
 	## select_w
@@ -158,7 +160,11 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 			w_new.next[:] = ConcatSignal(w_16[31 : 0], w_16[32 : 31])
 
 			if (init):
-					print 'mem-init : 0%x' % block[512:480]
+					print 'mem-init : %x' % block[512:480]
+					print 'mem-init : %x' % block[480:448]
+					print 'mem-init : %x' % block[448:416]
+					print 'mem-init : %x' % block[416:384]
+					print 'whole_block %x' % block
 					w_mem00_new.next[:] = block[512 : 480]
 					w_mem01_new.next[:] = block[480 : 448]
 					w_mem02_new.next[:] = block[448 : 416]
