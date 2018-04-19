@@ -256,64 +256,64 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 		w_next, round_ctr_inc, round_ctr_rst, digest_valid_new, digest_valid_we, sha1_ctrl_new, 
 		sha1_ctrl_we, sha1_ctrl_reg, init, round_ctr_reg)
 	def sha1_ctrl_fsm():
-			digest_init.next      = 0
-			digest_update.val    = 0
-			state_init.val       = 0
-			state_update.val     = 0
-			first_block.val      = 0
-			ready_flag.val       = 0
-			w_init.val           = 0
-			w_next.val           = 0
-			round_ctr_inc.next   = 0
-			round_ctr_rst.next    = 0
-			digest_valid_new.next = 0
-			digest_valid_we.next  = 0
-			sha1_ctrl_new.next[:]    = CTRL_IDLE
-			sha1_ctrl_we.next     = 0
-			print 'finite state, ctr is: %d' % sha1_ctrl_reg
-			if sha1_ctrl_reg == CTRL_IDLE:
+		digest_init.next      = 0
+		digest_update .next    = 0
+		state_init .next       = 0
+		state_update .next     = 0
+		first_block .next      = 0
+		ready_flag .next       = 0
+		w_init .next           = 0
+		w_next .next           = 0
+		round_ctr_inc.next   = 0
+		round_ctr_rst.next    = 0
+		digest_valid_new.next = 0
+		digest_valid_we.next  = 0
+		sha1_ctrl_new.next[:]    = CTRL_IDLE
+		sha1_ctrl_we.next     = 0
+		print 'finite state, ctr is: %d' % sha1_ctrl_reg
+		if sha1_ctrl_reg == CTRL_IDLE:
 
-				ready_flag.val = 1
-				print "init or next recieved"
-				if (init):
-					print 'init-ing'
-					digest_init.val      = 1
-					w_init.val           = 1
-					state_init.val       = 1
-					first_block.val      = 1
-					round_ctr_rst.val    = 1
-					digest_valid_new.next[:] = 0
-					digest_valid_we.next  = 1
-					sha1_ctrl_new.next[:]    = CTRL_ROUNDS
-					sha1_ctrl_we.next     = 1
+			ready_flag .next = 1
+			print "init or next recieved"
+			if (init):
+				print 'init-ing'
+				digest_init .next      = 1
+				w_init .next           = 1
+				state_init .next       = 1
+				first_block .next      = 1
+				round_ctr_rst .next    = 1
+				digest_valid_new.next[:] = 0
+				digest_valid_we.next  = 1
+				sha1_ctrl_new.next[:]    = CTRL_ROUNDS
+				sha1_ctrl_we.next     = 1
 
-				if (next):
-					print 'next-ing'
-					w_init.val           = 1
-					state_init.val       = 1
-					round_ctr_rst.next    = 1
-					digest_valid_new.next = 0
-					digest_valid_we.next  = 1
-					sha1_ctrl_new.next[:]    = CTRL_ROUNDS
-					sha1_ctrl_we.next     = 1
-
-
-			elif sha1_ctrl_reg == CTRL_ROUNDS:
-					state_update.val   = 1
-					round_ctr_inc.next  = 1
-					w_next.val         = 1
-
-					if (round_ctr_reg == SHA1_ROUNDS):
-						sha1_ctrl_new.next[:]  = CTRL_DONE
-						sha1_ctrl_we.next   = 1
+			if (next):
+				print 'next-ing'
+				w_init .next           = 1
+				state_init .next       = 1
+				round_ctr_rst.next    = 1
+				digest_valid_new.next = 0
+				digest_valid_we.next  = 1
+				sha1_ctrl_new.next[:]    = CTRL_ROUNDS
+				sha1_ctrl_we.next     = 1
 
 
-			elif sha1_ctrl_reg == CTRL_DONE:
-					digest_update.val     = 1
-					digest_valid_new.next  = 1
-					digest_valid_we.next   = 1
-					sha1_ctrl_new.next[:]     = CTRL_IDLE
-					sha1_ctrl_we.next      = 1
+		elif sha1_ctrl_reg == CTRL_ROUNDS:
+				state_update .next   = 1
+				round_ctr_inc.next  = 1
+				w_next .next         = 1
+
+				if (round_ctr_reg == SHA1_ROUNDS):
+					sha1_ctrl_new.next[:]  = CTRL_DONE
+					sha1_ctrl_we.next   = 1
+
+
+		elif sha1_ctrl_reg == CTRL_DONE:
+				digest_update .next     = 1
+				digest_valid_new.next  = 1
+				digest_valid_we.next   = 1
+				sha1_ctrl_new.next[:]     = CTRL_IDLE
+				sha1_ctrl_we.next      = 1
 
 	return logic, reg_update, w_mem_inst, digest_logic, state_logic, round_ctr, sha1_ctrl_fsm
 
