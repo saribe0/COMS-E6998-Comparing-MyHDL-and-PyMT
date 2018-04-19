@@ -66,11 +66,11 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 	##----------------------------------------------------------------
 	@always_comb
 	def logic():
-		core_block.next = ConcatSignal(block_reg[0], block_reg[1], block_reg[2], block_reg[3],
+		core_block.next[:] = ConcatSignal(block_reg[0], block_reg[1], block_reg[2], block_reg[3],
 											 block_reg[4], block_reg[5], block_reg[6], block_reg[7],
 											 block_reg[8], block_reg[9], block_reg[10], block_reg[11],
 											 block_reg[12], block_reg[13], block_reg[14], block_reg[15])
-		read_data.next = tmp_read_data
+		read_data.next[:] = tmp_read_data
 		error.next = tmp_error
 
 
@@ -86,7 +86,7 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 	## All registers are positive edge triggered with
 	## asynchronous active low reset.
 	##----------------------------------------------------------------
-	@always(clk.posedge or reset_n.negedge)
+	@always(clk.posedge, reset_n.negedge)
 	def reg_update():
 
 		if not reset_n:
@@ -97,19 +97,19 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 			digest_valid_reg.next = 0
 
 			for i in range(16):
-				block_reg[i].next = 0
+				block_reg[i].next[:] = 0
 
 		else:
 			ready_reg.next = core_ready
 			digest_valid_reg.next = core_digest_valid
 			init_reg.next = init_new
-			next_reg = next_new
-
+			next_reg.next = next_new
+			print 'init reg will be set to: %d' % init_new
 			if block_we:
-				block_reg[int(address[4:])].next = write_data
+				block_reg[int(address[4:])].next[:] = write_data
 
 			if core_digest_valid:
-				digest_reg.next = core_digest
+				digest_reg.next[:] = core_digest
 
 	##----------------------------------------------------------------
 	## api
@@ -118,33 +118,36 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 	##----------------------------------------------------------------
 	@always(init_new, next_new, block_we, tmp_read_data, tmp_error, address, cs, we)
 	def api():
-		init_new[:] 		= 0
-		next_new[:] 		= 0
-		block_we[:] 		= 0
-		tmp_read_data[:] 	= 32
-		tmp_error[:]    	= 0
+		init_new.next 		= 0
+		next_new.next	 	= 0
+		block_we.next	 	= 0
+		tmp_read_data.next[:] 	= 0
+		tmp_error.next    	= 0
 
 		if cs:
+			# Write
 			if we:
-				if ((address >= ADDR_BLOCK0) and (address <= ADDR_BLOCK16)):
-					block_we = 1;
+				if ((address >= ADDR_BLOCK0) and (address <= ADDR_BLOCK15)):
+					block_we.next = 1;
 				if (address == ADDR_CTRL):
 					init_new.next = write_data[CTRL_INIT_BIT];
 					next_new.next = write_data[CTRL_NEXT_BIT];
-
+			# Read
+			else:
 				if address == ADDR_NAME0:
-					tmp_read_data[:] = CORE_NAME0
+					tmp_read_data.next[:] = CORE_NAME0
 				elif address == ADDR_NAME1:
-					tmp_read_data[:] = CORE_NAME1
+					tmp_read_data.next[:] = CORE_NAME1
 				elif address == ADDR_VERSION:
-					tmp_read_data[:] = CORE_VERSION
+					tmp_read_data.next[:] = CORE_VERSION
 				elif address == ADDR_CTRL:
-					tmp_read_data = ConcatSignal(Signal(intbv(0)[31]), next_reg, init_reg)
+					tmp_read_data.next[:] = ConcatSignal(Signal(intbv(0)[31]), next_reg, init_reg)
 				elif address == ADDR_STATUS:
-					tmp_read_data = ConcatSignal(Signal(intbv(0)[31]), digest_valid_reg, ready_reg)
+					tmp_read_data.next[:] = ConcatSignal(Signal(intbv(0)[31]), digest_valid_reg, ready_reg)
 				else:
-					tmp_error[:] = 1
+					tmp_error.next = 1
 
+	return core, api, reg_update, logic
 ##======================================================================
 ## EOF sha1.v
 ##======================================================================

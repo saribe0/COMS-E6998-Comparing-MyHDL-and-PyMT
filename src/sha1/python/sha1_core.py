@@ -64,9 +64,9 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	##----------------------------------------------------------------
 	## Wires.
 	##----------------------------------------------------------------
-	digest_init		= Signal(bool())
+	digest_init	= Signal(bool())
 	digest_update	= Signal(bool())
-	state_init		= Signal(bool())
+	state_init	= Signal(bool())
 	state_update	= Signal(bool())
 	first_block	= Signal(bool())
 	ready_flag	= Signal(bool())
@@ -87,7 +87,7 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	@always_comb
 	def logic():
 		ready.next = ready_flag
-		digest.next = ConcatSigna(H0_reg, H1_reg, H2_reg, H3_reg, H4_reg)
+		digest.next = ConcatSignal(H0_reg, H1_reg, H2_reg, H3_reg, H4_reg)
 		digest_valid.next = digest_valid_reg
 
 	##----------------------------------------------------------------
@@ -144,28 +144,28 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	##----------------------------------------------------------------
 	@always(H0_new, H1_new, H2_new, H3_new, H4_new, H_we, H0_reg, H1_reg, H2_reg, H3_reg, H4_reg, a_reg, b_reg, c_reg, d_reg, e_reg)
 	def digest_logic():
-		H0_new[:] = 0x0
-		H1_new[:] = 0x0
-		H2_new[:] = 0x0
-		H3_new[:] = 0x0
-		H4_new[:] = 0x0
-		H_we[:] = 0
+		H0_new.next[:] = 0x0
+		H1_new.next[:] = 0x0
+		H2_new.next[:] = 0x0
+		H3_new.next[:] = 0x0
+		H4_new.next[:] = 0x0
+		H_we.next = 0
 
 		if (digest_init):
-			H0_new[:] = H0_0
-			H1_new[:] = H0_1
-			H2_new[:] = H0_2
-			H3_new[:] = H0_3
-			H4_new[:] = H0_4
-			H_we[:] = 1
+			H0_new.next[:] = H0_0
+			H1_new.next[:] = H0_1
+			H2_new.next[:] = H0_2
+			H3_new.next[:] = H0_3
+			H4_new.next[:] = H0_4
+			H_we.next = 1
 
 		if (digest_update):
-			H0_new[:] = H0_reg + a_reg
-			H1_new[:] = H1_reg + b_reg
-			H2_new[:] = H2_reg + c_reg
-			H3_new[:] = H3_reg + d_reg
-			H4_new[:] = H4_reg + e_reg
-			H_we[:] = 1
+			H0_new.next[:] = H0_reg + a_reg
+			H1_new.next[:] = H1_reg + b_reg
+			H2_new.next[:] = H2_reg + c_reg
+			H3_new.next[:] = H3_reg + d_reg
+			H4_new.next[:] = H4_reg + e_reg
+			H_we.val = 1
 
 	##----------------------------------------------------------------
 	## state_logic
@@ -180,52 +180,52 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 		k  = Signal(intbv(0)[32:])
 		t  = Signal(intbv(0)[32:])
 
-		a_new[:] = 0
-		b_new[:] = 0
-		c_new[:] = 0
-		d_new[:] = 0
-		e_new[:] = 0
-		a_e_we[:] = 0
+		a_new.next[:] = 0
+		b_new.next[:] = 0
+		c_new.next[:] = 0
+		d_new.next[:] = 0
+		e_new.next[:] = 0
+		a_e_we.next = 0
 
 		if state_init:
 			if first_block:
-				a_new[:]  = H0_0
-				b_new[:]  = H0_1
-				c_new[:]  = H0_2
-				d_new[:]  = H0_3
-				e_new[:]  = H0_4
-				a_e_we[:] = 1
+				a_new.next[:]  = H0_0
+				b_new.next[:]  = H0_1
+				c_new.next[:]  = H0_2
+				d_new.next[:]  = H0_3
+				e_new.next[:]  = H0_4
+				a_e_we.next[:] = 1
 			else:
-				a_new[:]  = H0_reg
-				b_new[:]  = H1_reg
-				c_new[:]  = H2_reg
-				d_new[:]  = H3_reg
-				e_new[:]  = H4_reg
-				a_e_we[:] = 1
+				a_new.next[:]  = H0_reg
+				b_new.next[:]  = H1_reg
+				c_new.next[:]  = H2_reg
+				d_new.next[:]  = H3_reg
+				e_new.next[:]  = H4_reg
+				a_e_we.next = 1
 
 		if state_update:
 			if round_ctr_reg <= 19:
-				k[:] = 0x5a827999
-				f[:] =  ((b_reg & c_reg) ^ (~b_reg & d_reg))
+				k.val[:] = 0x5a827999
+				f.val[:] =  ((b_reg & c_reg) ^ (~b_reg & d_reg))
 			elif ((round_ctr_reg >= 20) and (round_ctr_reg <= 39)):
-				k[:] = 0x6ed9eba1
-				f[:] = b_reg ^ c_reg ^ d_reg
+				k.val[:] = 0x6ed9eba1
+				f.val[:] = b_reg ^ c_reg ^ d_reg
 			elif ((round_ctr_reg >= 40) and (round_ctr_reg <= 59)):
-				k[:] = 0x8f1bbcdc
-				f[:] = ((b_reg | c_reg) ^ (b_reg | d_reg) ^ (c_reg | d_reg))
+				k.val[:] = 0x8f1bbcdc
+				f.val[:] = ((b_reg | c_reg) ^ (b_reg | d_reg) ^ (c_reg | d_reg))
 			elif round_ctr_reg >= 60:
-				k[:] = 0xca62c1d6
-				f[:] = b_reg ^ c_reg ^ d_reg
+				k.val[:] = 0xca62c1d6
+				f.val[:] = b_reg ^ c_reg ^ d_reg
 
-			a5[:] = ConcatSignal(a_reg[27 : 0], a_reg[32 : 27])
-			t[:] = a5 + e_reg + f + k + w
+			a5.val[:] = ConcatSignal(a_reg[27 : 0], a_reg[32 : 27])
+			t.val[:] = a5 + e_reg + f + k + w
 
-			a_new[:]  = t
-			b_new[:]  = a_reg
-			c_new[:]  = ConcatSignal(b_reg[2 : 0], b_reg[32 : 2])
-			d_new[:]  = c_reg
-			e_new[:]  = d_reg
-			a_e_we[:] = 1
+			a_new.next[:]  = t
+			b_new.next[:]  = a_reg
+			c_new.next[:]  = ConcatSignal(b_reg[2 : 0], b_reg[32 : 2])
+			d_new.next[:]  = c_reg
+			e_new.next[:]  = d_reg
+			a_e_we.next = 1
 
 
 	##----------------------------------------------------------------
@@ -236,16 +236,16 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	##----------------------------------------------------------------
 	@always(round_ctr_new, round_ctr_we, round_ctr_rst, round_ctr_inc, round_ctr_reg)
 	def round_ctr():
-		round_ctr_new[:] = 0
-		round_ctr_we[:]  = 0
+		round_ctr_new.next[:] = 0
+		round_ctr_we.next  = 0
 
 		if (round_ctr_rst):
-			round_ctr_new[:] = 0
-			round_ctr_we[:]  = 1
+			round_ctr_new.next[:] = 0
+			round_ctr_we.next  = 1
 
 		if (round_ctr_inc):
-			round_ctr_new[:] = round_ctr_reg + 1
-			round_ctr_we[:]  = 1
+			round_ctr_new.next[:] = round_ctr_reg + 1
+			round_ctr_we.next  = 1
 
 
 	##----------------------------------------------------------------
@@ -256,62 +256,66 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 		w_next, round_ctr_inc, round_ctr_rst, digest_valid_new, digest_valid_we, sha1_ctrl_new, 
 		sha1_ctrl_we, sha1_ctrl_reg, init, round_ctr_reg)
 	def sha1_ctrl_fsm():
-			digest_init[:]      = 0
-			digest_update[:]    = 0
-			state_init[:]       = 0
-			state_update[:]     = 0
-			first_block[:]      = 0
-			ready_flag[:]       = 0
-			w_init[:]           = 0
-			w_next[:]           = 0
-			round_ctr_inc[:]    = 0
-			round_ctr_rst[:]    = 0
-			digest_valid_new[:] = 0
-			digest_valid_we[:]  = 0
-			sha1_ctrl_new[:]    = CTRL_IDLE
-			sha1_ctrl_we[:]     = 0
-
+			digest_init.next      = 0
+			digest_update.val    = 0
+			state_init.val       = 0
+			state_update.val     = 0
+			first_block.val      = 0
+			ready_flag.val       = 0
+			w_init.val           = 0
+			w_next.val           = 0
+			round_ctr_inc.next   = 0
+			round_ctr_rst.next    = 0
+			digest_valid_new.next = 0
+			digest_valid_we.next  = 0
+			sha1_ctrl_new.next[:]    = CTRL_IDLE
+			sha1_ctrl_we.next     = 0
+			print 'finite state, ctr is: %d' % sha1_ctrl_reg
 			if sha1_ctrl_reg == CTRL_IDLE:
 
-				ready_flag[:] = 1
-
+				ready_flag.val = 1
+				print "init or next recieved"
 				if (init):
-					digest_init[:]      = 1
-					w_init[:]           = 1
-					state_init[:]       = 1
-					first_block[:]      = 1
-					round_ctr_rst[:]    = 1
-					digest_valid_new[:] = 0
-					digest_valid_we[:]  = 1
-					sha1_ctrl_new[:]    = CTRL_ROUNDS
-					sha1_ctrl_we[:]     = 1
+					print 'init-ing'
+					digest_init.val      = 1
+					w_init.val           = 1
+					state_init.val       = 1
+					first_block.val      = 1
+					round_ctr_rst.val    = 1
+					digest_valid_new.next[:] = 0
+					digest_valid_we.next  = 1
+					sha1_ctrl_new.next[:]    = CTRL_ROUNDS
+					sha1_ctrl_we.next     = 1
 
 				if (next):
-					w_init[:]           = 1
-					state_init[:]       = 1
-					round_ctr_rst[:]    = 1
-					digest_valid_new[:] = 0
-					digest_valid_we[:]  = 1
-					sha1_ctrl_new[:]    = CTRL_ROUNDS
-					sha1_ctrl_we[:]     = 1
+					print 'next-ing'
+					w_init.val           = 1
+					state_init.val       = 1
+					round_ctr_rst.next    = 1
+					digest_valid_new.next = 0
+					digest_valid_we.next  = 1
+					sha1_ctrl_new.next[:]    = CTRL_ROUNDS
+					sha1_ctrl_we.next     = 1
 
 
 			elif sha1_ctrl_reg == CTRL_ROUNDS:
-					state_update[:]   = 1
-					round_ctr_inc[:]  = 1
-					w_next[:]         = 1
+					state_update.val   = 1
+					round_ctr_inc.next  = 1
+					w_next.val         = 1
 
 					if (round_ctr_reg == SHA1_ROUNDS):
-						sha1_ctrl_new[:]  = CTRL_DONE
-						sha1_ctrl_we[:]   = 1
+						sha1_ctrl_new.next[:]  = CTRL_DONE
+						sha1_ctrl_we.next   = 1
 
 
 			elif sha1_ctrl_reg == CTRL_DONE:
-					digest_update[:]     = 1
-					digest_valid_new[:]  = 1
-					digest_valid_we[:]   = 1
-					sha1_ctrl_new[:]     = CTRL_IDLE
-					sha1_ctrl_we[:]      = 1
+					digest_update.val     = 1
+					digest_valid_new.next  = 1
+					digest_valid_we.next   = 1
+					sha1_ctrl_new.next[:]     = CTRL_IDLE
+					sha1_ctrl_we.next      = 1
+
+	return logic, reg_update, w_mem_inst, digest_logic, state_logic, round_ctr, sha1_ctrl_fsm
 
 ##======================================================================
 ## EOF sha1_core.v

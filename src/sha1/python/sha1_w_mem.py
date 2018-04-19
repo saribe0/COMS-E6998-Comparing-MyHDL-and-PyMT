@@ -55,7 +55,7 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	##----------------------------------------------------------------
 	@always_comb
 	def logic():
-		w.next = w_tmp
+		w.next[:] = w_tmp
 
 
 	##----------------------------------------------------------------
@@ -65,35 +65,35 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	## All registers are positive edge triggered with
 	## asynchronous active low reset.
 	##----------------------------------------------------------------
-	@always(clk.posedge or reset_n.negedge)
+	@always(clk.posedge, reset_n.negedge)
 	def reg_update():
 
-		if (not reset_n):
+		if not reset_n:
 			for i in range(16):
-				w_mem[i].next = 0x0
+				w_mem[i].next[:] = 0x0
 			sha1_w_mem_ctrl_reg.next = CTRL_IDLE
 
 		else:
 			if (w_mem_we):
-				w_mem[0].next <= w_mem00_new
-				w_mem[1].next <= w_mem01_new
-				w_mem[2].next <= w_mem02_new
-				w_mem[3].next <= w_mem03_new
-				w_mem[4].next <= w_mem04_new
-				w_mem[5].next <= w_mem05_new
-				w_mem[6].next <= w_mem06_new
-				w_mem[7].next <= w_mem07_new
-				w_mem[8].next <= w_mem08_new
-				w_mem[9].next <= w_mem09_new
-				w_mem[10].next <= w_mem10_new
-				w_mem[11].next <= w_mem11_new
-				w_mem[12].next <= w_mem12_new
-				w_mem[13].next <= w_mem13_new
-				w_mem[14].next <= w_mem14_new
-				w_mem[15].next <= w_mem15_new
+				w_mem[0].next[:] <= w_mem00_new
+				w_mem[1].next[:] <= w_mem01_new
+				w_mem[2].next[:] <= w_mem02_new
+				w_mem[3].next[:] <= w_mem03_new
+				w_mem[4].next[:] <= w_mem04_new
+				w_mem[5].next[:] <= w_mem05_new
+				w_mem[6].next[:] <= w_mem06_new
+				w_mem[7].next[:] <= w_mem07_new
+				w_mem[8].next[:] <= w_mem08_new
+				w_mem[9].next[:] <= w_mem09_new
+				w_mem[10].next[:] <= w_mem10_new
+				w_mem[11].next[:] <= w_mem11_new
+				w_mem[12].next[:] <= w_mem12_new
+				w_mem[13].next[:] <= w_mem13_new
+				w_mem[14].next[:] <= w_mem14_new
+				w_mem[15].next[:] <= w_mem15_new
 
 			if (w_ctr_we):
-				w_ctr_reg.next = w_ctr_new
+				w_ctr_reg.next[:] = w_ctr_new
 
 			if (sha1_w_mem_ctrl_we):
 				sha1_w_mem_ctrl_reg.next = sha1_w_mem_ctrl_new
@@ -109,9 +109,9 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 		w_mem[8], w_mem[9], w_mem[10], w_mem[11], w_mem[12], w_mem[13], w_mem[14], w_mem[15])
 	def select_w():
 		if (w_ctr_reg < 16):
-			w_tmp[:] = w_mem[int(w_ctr_reg[3 : 0])]
+			w_tmp.val[:] = w_mem[int(w_ctr_reg[3 : 0])]
 		else:
-			w_tmp[:] = w_new
+			w_tmp.val[:] = w_new
 
 
 	##----------------------------------------------------------------
@@ -132,68 +132,68 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 			w_13 = intbv()[32:]
 			w_16 = intbv()[32:]
 
-			w_mem00_new[:] = 0x0
-			w_mem01_new[:] = 0x0
-			w_mem02_new[:] = 0x0
-			w_mem03_new[:] = 0x0
-			w_mem04_new[:] = 0x0
-			w_mem05_new[:] = 0x0
-			w_mem06_new[:] = 0x0
-			w_mem07_new[:] = 0x0
-			w_mem08_new[:] = 0x0
-			w_mem09_new[:] = 0x0
-			w_mem10_new[:] = 0x0
-			w_mem11_new[:] = 0x0
-			w_mem12_new[:] = 0x0
-			w_mem13_new[:] = 0x0
-			w_mem14_new[:] = 0x0
-			w_mem15_new[:] = 0x0
-			w_mem_we[:]    = 0
+			w_mem00_new.next[:] = 0x0
+			w_mem01_new.next[:] = 0x0
+			w_mem02_new.next[:] = 0x0
+			w_mem03_new.next[:] = 0x0
+			w_mem04_new.next[:] = 0x0
+			w_mem05_new.next[:] = 0x0
+			w_mem06_new.next[:] = 0x0
+			w_mem07_new.next[:] = 0x0
+			w_mem08_new.next[:] = 0x0
+			w_mem09_new.next[:] = 0x0
+			w_mem10_new.next[:] = 0x0
+			w_mem11_new.next[:] = 0x0
+			w_mem12_new.next[:] = 0x0
+			w_mem13_new.next[:] = 0x0
+			w_mem14_new.next[:] = 0x0
+			w_mem15_new.next[:] = 0x0
+			w_mem_we.next  = 0
 
 			w_0[:]   = w_mem[0]
 			w_2[:]   = w_mem[2]
 			w_8[:]   = w_mem[8]
 			w_13[:]  = w_mem[13]
 			w_16[:]  = w_13 ^ w_8 ^ w_2 ^ w_0
-			w_new[:] = SignalConcat(w_16[31 : 0], w_16[32 : 31])
+			w_new.val[:] = ConcatSignal(w_16[31 : 0], w_16[32 : 31])
 
 			if (init):
-					w_mem00_new[:] = block[511 : 480]
-					w_mem01_new[:] = block[479 : 448]
-					w_mem02_new[:] = block[447 : 416]
-					w_mem03_new[:] = block[415 : 384]
-					w_mem04_new[:] = block[383 : 352]
-					w_mem05_new[:] = block[351 : 320]
-					w_mem06_new[:] = block[319 : 288]
-					w_mem07_new[:] = block[287 : 256]
-					w_mem08_new[:] = block[255 : 224]
-					w_mem09_new[:] = block[223 : 192]
-					w_mem10_new[:] = block[191 : 160]
-					w_mem11_new[:] = block[159 : 128]
-					w_mem12_new[:] = block[127 :  96]
-					w_mem13_new[:] = block[95  :  64]
-					w_mem14_new[:] = block[63  :  32]
-					w_mem15_new[:] = block[31  :   0]
-					w_mem_we[:]    = 1
+					w_mem00_new.next[:] = block[511 : 480]
+					w_mem01_new.next[:] = block[479 : 448]
+					w_mem02_new.next[:] = block[447 : 416]
+					w_mem03_new.next[:] = block[415 : 384]
+					w_mem04_new.next[:] = block[383 : 352]
+					w_mem05_new.next[:] = block[351 : 320]
+					w_mem06_new.next[:] = block[319 : 288]
+					w_mem07_new.next[:] = block[287 : 256]
+					w_mem08_new.next[:] = block[255 : 224]
+					w_mem09_new.next[:] = block[223 : 192]
+					w_mem10_new.next[:] = block[191 : 160]
+					w_mem11_new.next[:] = block[159 : 128]
+					w_mem12_new.next[:] = block[127 :  96]
+					w_mem13_new.next[:] = block[95  :  64]
+					w_mem14_new.next[:] = block[63  :  32]
+					w_mem15_new.next[:] = block[31  :   0]
+					w_mem_we.next   = 1
 
 			elif (w_ctr_reg > 15):
-					w_mem00_new[:] = w_mem[1]
-					w_mem01_new[:] = w_mem[2]
-					w_mem02_new[:] = w_mem[3]
-					w_mem03_new[:] = w_mem[4]
-					w_mem04_new[:] = w_mem[5]
-					w_mem05_new[:] = w_mem[6]
-					w_mem06_new[:] = w_mem[7]
-					w_mem07_new[:] = w_mem[8]
-					w_mem08_new[:] = w_mem[9]
-					w_mem09_new[:] = w_mem[10]
-					w_mem10_new[:] = w_mem[11]
-					w_mem11_new[:] = w_mem[12]
-					w_mem12_new[:] = w_mem[13]
-					w_mem13_new[:] = w_mem[14]
-					w_mem14_new[:] = w_mem[15]
-					w_mem15_new[:] = w_new
-					w_mem_we[:]    = 1
+					w_mem00_new.next[:] = w_mem[1]
+					w_mem01_new.next[:] = w_mem[2]
+					w_mem02_new.next[:] = w_mem[3]
+					w_mem03_new.next[:] = w_mem[4]
+					w_mem04_new.next[:] = w_mem[5]
+					w_mem05_new.next[:] = w_mem[6]
+					w_mem06_new.next[:] = w_mem[7]
+					w_mem07_new.next[:] = w_mem[8]
+					w_mem08_new.next[:] = w_mem[9]
+					w_mem09_new.next[:] = w_mem[10]
+					w_mem10_new.next[:] = w_mem[11]
+					w_mem11_new.next[:] = w_mem[12]
+					w_mem12_new.next[:] = w_mem[13]
+					w_mem13_new.next[:] = w_mem[14]
+					w_mem14_new.next[:] = w_mem[15]
+					w_mem15_new.next[:] = w_new
+					w_mem_we.next    = 1
 
 
 	##----------------------------------------------------------------
@@ -204,16 +204,16 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	##----------------------------------------------------------------
 	@always(w_ctr_new, w_ctr_we, w_ctr_rst, w_ctr_inc, w_ctr_reg)
 	def w_ctr():
-		w_ctr_new[:] = 0
-		w_ctr_we[:]  = 0
+		w_ctr_new.next[:] = 0
+		w_ctr_we.next  = 0
 
 		if (w_ctr_rst):
-			w_ctr_new[:] = 0
-			w_ctr_we[:]  = 1
+			w_ctr_new.next[:] = 0
+			w_ctr_we.next  = 1
 
 		if (w_ctr_inc):
-			w_ctr_new[:] = w_ctr_reg + 1
-			w_ctr_we[:]  = 1
+			w_ctr_new.next[:] = w_ctr_reg + 1
+			w_ctr_we.next  = 1
 
 
 	##----------------------------------------------------------------
@@ -223,24 +223,26 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	##----------------------------------------------------------------
 	@always(w_ctr_rst, w_ctr_inc, sha1_w_mem_ctrl_new, sha1_w_mem_ctrl_we, sha1_w_mem_ctrl_reg, init, next, w_ctr_reg, )
 	def sha1_w_mem_fsm():
-		w_ctr_rst[:]           = 0
-		w_ctr_inc[:]           = 0
-		sha1_w_mem_ctrl_new[:] = CTRL_IDLE
-		sha1_w_mem_ctrl_we[:]  = 0
+		w_ctr_rst.next           = 0
+		w_ctr_inc.next           = 0
+		sha1_w_mem_ctrl_new.next = CTRL_IDLE
+		sha1_w_mem_ctrl_we.next  = 0
 
 		if sha1_w_mem_ctrl_reg == CTRL_IDLE:
 			if (init):
-				w_ctr_rst[:]           = 1
-				sha1_w_mem_ctrl_new[:] = CTRL_UPDATE
-				sha1_w_mem_ctrl_we[:]  = 1
+				w_ctr_rst.next           = 1
+				sha1_w_mem_ctrl_new.next = CTRL_UPDATE
+				sha1_w_mem_ctrl_we.next  = 1
 
 		if sha1_w_mem_ctrl_reg == CTRL_UPDATE:
 			if (next):
-				w_ctr_inc[:] = 1
+				w_ctr_inc.next = 1
 
 			if (w_ctr_reg == SHA1_ROUNDS):
-				sha1_w_mem_ctrl_new[:] = CTRL_IDLE
-				sha1_w_mem_ctrl_we[:]  = 1
+				sha1_w_mem_ctrl_new.next = CTRL_IDLE
+				sha1_w_mem_ctrl_we.next  = 1
+
+	return logic, reg_update, select_w, w_mem_update_logic, w_ctr, sha1_w_mem_fsm
 
 ##======================================================================
 ## sha1_w_mem.v
