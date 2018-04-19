@@ -146,7 +146,8 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	##
 	## The logic needed to init as well as update the digest.
 	##----------------------------------------------------------------
-	@always(digest_init, digest_update, H0_new, H1_new, H2_new, H3_new, H4_new, H_we, H0_reg, H1_reg, H2_reg, H3_reg, H4_reg, a_reg, b_reg, c_reg, d_reg, e_reg)
+	#@always(digest_init, digest_update, H0_new, H1_new, H2_new, H3_new, H4_new, H_we, H0_reg, H1_reg, H2_reg, H3_reg, H4_reg, a_reg, b_reg, c_reg, d_reg, e_reg)
+	@always(digest_init, digest_update, H0_reg, H1_reg, H2_reg, H3_reg, H4_reg, a_reg, b_reg, c_reg, d_reg, e_reg)
 	def digest_logic():
 		H0_new.next[:] = 0
 		H1_new.next[:] = 0
@@ -177,8 +178,10 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	## The logic needed to init as well as update the state during
 	## round processing.
 	##----------------------------------------------------------------
-	@always(a_new, b_new, c_new, d_new, e_new, a_e_we, state_init, first_block, H0_reg, H1_reg, H2_reg, 
-		H3_reg, H4_reg, round_ctr_reg, a_reg, b_reg, c_reg, d_reg, e_reg, w, state_update)
+	#@always(a_new, b_new, c_new, d_new, e_new, a_e_we, state_init, first_block, H0_reg, H1_reg, H2_reg, 
+	#	H3_reg, H4_reg, round_ctr_reg, a_reg, b_reg, c_reg, d_reg, e_reg, w, state_update)
+	@always(state_init, first_block, H0_reg, H1_reg, H2_reg,
+                H3_reg, H4_reg, round_ctr_reg, a_reg, b_reg, c_reg, d_reg, e_reg, w, state_update)
 	def state_logic():
 		a5 = modbv(0)[32:]
 		f  = modbv(0)[32:]
@@ -241,7 +244,8 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	## Update logic for the round counter, a monotonically
 	## increasing counter with reset.
 	##----------------------------------------------------------------
-	@always(round_ctr_new, round_ctr_we, round_ctr_rst, round_ctr_inc, round_ctr_reg)
+	#@always(round_ctr_new, round_ctr_we, round_ctr_rst, round_ctr_inc, round_ctr_reg)
+	@always(round_ctr_rst, round_ctr_inc, round_ctr_reg)
 	def round_ctr():
 		round_ctr_new.next[:] = 0
 		round_ctr_we.next  = 0
@@ -259,9 +263,10 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	## sha1_ctrl_fsm
 	## Logic for the state machine controlling the core behaviour.
 	##----------------------------------------------------------------
-	@always(digest_init, digest_update, state_init, state_update, first_block, ready_flag, w_init, 
-		w_next, round_ctr_inc, round_ctr_rst, digest_valid_new, digest_valid_we, sha1_ctrl_new, 
-		sha1_ctrl_we, sha1_ctrl_reg, init, round_ctr_reg, next)
+	#@always(digest_init, digest_update, state_init, state_update, first_block, ready_flag, w_init, 
+	#	w_next, round_ctr_inc, round_ctr_rst, digest_valid_new, digest_valid_we, sha1_ctrl_new, 
+	#	sha1_ctrl_we, sha1_ctrl_reg, init, round_ctr_reg, next)
+	@always(sha1_ctrl_reg, init, round_ctr_reg, next)
 	def sha1_ctrl_fsm():
 		digest_init.next      = 0
 		digest_update.next    = 0

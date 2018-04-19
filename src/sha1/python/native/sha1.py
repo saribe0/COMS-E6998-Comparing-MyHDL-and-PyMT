@@ -127,11 +127,16 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 	##
 	## The interface command decoding logic.
 	##----------------------------------------------------------------
-	@always(init_new, next_new, block_we, tmp_read_data, tmp_error, address, cs, we, write_data, 
-		block_reg[0], block_reg[1], block_reg[2], block_reg[3], block_reg[4], block_reg[5], 
-		block_reg[6], block_reg[7], block_reg[8], block_reg[9], block_reg[10], block_reg[11],
+	#@always(init_new, next_new, block_we, tmp_read_data, tmp_error, address, cs, we, write_data, 
+	#	block_reg[0], block_reg[1], block_reg[2], block_reg[3], block_reg[4], block_reg[5], 
+	#	block_reg[6], block_reg[7], block_reg[8], block_reg[9], block_reg[10], block_reg[11],
+        #        block_reg[12], block_reg[13], block_reg[14], block_reg[15], digest_reg, next_reg, init_reg,
+	#	digest_valid_reg, ready_reg)
+	@always(address, cs, we, write_data, 
+                block_reg[0], block_reg[1], block_reg[2], block_reg[3], block_reg[4], block_reg[5], 
+                block_reg[6], block_reg[7], block_reg[8], block_reg[9], block_reg[10], block_reg[11],
                 block_reg[12], block_reg[13], block_reg[14], block_reg[15], digest_reg, next_reg, init_reg,
-		digest_valid_reg, ready_reg)
+                digest_valid_reg, ready_reg)
 	def api():
 		init_new.next 		= 0
 		next_new.next	 	= 0
@@ -161,10 +166,7 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 					if (address == 0x23):
                                                 tmp_read_data.next[:] = digest_reg[64 : 32]
 					if (address == 0x24):
-                                                tmp_read_data.next[:] = digest_reg[32 :  0]
-
-					#tmp_offset = intbv((4 - (address - ADDR_DIGEST0)) * 32 + 32, min=0, max=159)
-					#tmp_read_data.next[:] = digest_reg[tmp_offset : (4 - (address - ADDR_DIGEST0)) * 32];
+                                                tmp_read_data.next[:] = digest_reg[32 :  0];
 
 				if address == ADDR_NAME0:
 					tmp_read_data.next[:] = CORE_NAME0

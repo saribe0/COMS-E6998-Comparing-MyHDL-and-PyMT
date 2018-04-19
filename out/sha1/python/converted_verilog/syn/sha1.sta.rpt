@@ -1,5 +1,5 @@
 TimeQuest Timing Analyzer report for sha1
-Thu Apr 19 16:07:55 2018
+Thu Apr 19 17:07:19 2018
 Quartus Prime Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
 
 
@@ -105,7 +105,7 @@ refer to the applicable agreement for further details.
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;  38.1%      ;
+;     Processor 2            ;  38.2%      ;
 +----------------------------+-------------+
 
 
@@ -114,7 +114,7 @@ refer to the applicable agreement for further details.
 +---------------+--------+--------------------------+
 ; SDC File Path ; Status ; Read at                  ;
 +---------------+--------+--------------------------+
-; sha1.sdc      ; OK     ; Thu Apr 19 16:07:46 2018 ;
+; sha1.sdc      ; OK     ; Thu Apr 19 17:07:09 2018 ;
 +---------------+--------+--------------------------+
 
 
@@ -860,7 +860,7 @@ Info: Running Quartus Prime TimeQuest Timing Analyzer
     Info: the sole purpose of programming logic devices manufactured by
     Info: Intel and sold by Intel or its authorized distributors.  Please
     Info: refer to the applicable agreement for further details.
-    Info: Processing started: Thu Apr 19 16:07:44 2018
+    Info: Processing started: Thu Apr 19 17:07:07 2018
 Info: Command: quartus_sta sha1
 Info: qsta_default_script.tcl version: #3
 Info (20032): Parallel compilation is enabled and will use up to 2 processors
@@ -941,8 +941,8 @@ Info (332102): Design is not fully constrained for setup requirements
 Info (332102): Design is not fully constrained for hold requirements
 Info: Quartus Prime TimeQuest Timing Analyzer was successful. 0 errors, 0 warnings
     Info: Peak virtual memory: 1287 megabytes
-    Info: Processing ended: Thu Apr 19 16:07:55 2018
-    Info: Elapsed time: 00:00:11
+    Info: Processing ended: Thu Apr 19 17:07:19 2018
+    Info: Elapsed time: 00:00:12
     Info: Total CPU time (on all processors): 00:00:15
 
 

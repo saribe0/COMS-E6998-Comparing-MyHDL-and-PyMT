@@ -1,5 +1,5 @@
 Flow report for sha1
-Thu Apr 19 16:07:55 2018
+Thu Apr 19 17:07:19 2018
 Quartus Prime Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
 
 
@@ -40,7 +40,7 @@ refer to the applicable agreement for further details.
 +-------------------------------------------------------------------------------+
 ; Flow Summary                                                                  ;
 +---------------------------------+---------------------------------------------+
-; Flow Status                     ; Successful - Thu Apr 19 16:07:42 2018       ;
+; Flow Status                     ; Successful - Thu Apr 19 17:07:06 2018       ;
 ; Quartus Prime Version           ; 17.1.0 Build 590 10/25/2017 SJ Lite Edition ;
 ; Revision Name                   ; sha1                                        ;
 ; Top-level Entity Name           ; sha1                                        ;
@@ -67,7 +67,7 @@ refer to the applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 04/19/2018 16:06:06 ;
+; Start date & time ; 04/19/2018 17:05:30 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; sha1                ;
 +-------------------+---------------------+
@@ -78,7 +78,7 @@ refer to the applicable agreement for further details.
 +-------------------------+--------------------------------+---------------+-------------+------------+
 ; Assignment Name         ; Value                          ; Default Value ; Entity Name ; Section Id ;
 +-------------------------+--------------------------------+---------------+-------------+------------+
-; COMPILER_SIGNATURE_ID   ; 11897984378212.152415396610131 ; --            ; --          ; --         ;
+; COMPILER_SIGNATURE_ID   ; 11897984378212.152415753012422 ; --            ; --          ; --         ;
 ; NUM_PARALLEL_PROCESSORS ; 2                              ; --            ; --          ; --         ;
 +-------------------------+--------------------------------+---------------+-------------+------------+
 
@@ -89,9 +89,9 @@ refer to the applicable agreement for further details.
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Analysis & Synthesis      ; 00:00:14     ; 1.0                     ; 976 MB              ; 00:00:20                           ;
-; Fitter                    ; 00:01:23     ; 1.1                     ; 2289 MB             ; 00:02:01                           ;
-; TimeQuest Timing Analyzer ; 00:00:11     ; 1.4                     ; 1287 MB             ; 00:00:15                           ;
-; Total                     ; 00:01:48     ; --                      ; --                  ; 00:02:36                           ;
+; Fitter                    ; 00:01:21     ; 1.1                     ; 2291 MB             ; 00:02:01                           ;
+; TimeQuest Timing Analyzer ; 00:00:12     ; 1.4                     ; 1287 MB             ; 00:00:15                           ;
+; Total                     ; 00:01:47     ; --                      ; --                  ; 00:02:36                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
@@ -109,7 +109,7 @@ refer to the applicable agreement for further details.
 ------------
 ; Flow Log ;
 ------------
-quartus_map sha1 --source=/home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/tb_sha1.v --source=/home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/sha1.v
+quartus_map sha1 --source=/home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/my_tb_sha1.v --source=/home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/sha1.v
 quartus_fit sha1
 quartus_sta sha1
 

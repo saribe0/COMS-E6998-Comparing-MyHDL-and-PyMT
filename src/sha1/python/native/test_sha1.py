@@ -72,12 +72,14 @@ def bench():
 
 
 	##----------------------------------------------------------------
-	## Device Under Test.
+	## Device Under Test. Only one of these lines should be uncommented
 	##----------------------------------------------------------------
 	
-	#dut = sha1(tb_clk, tb_reset_n, tb_cs, tb_write_read, tb_address, tb_data_in, tb_data_out, tb_error)
+	# Uncomment this line for pure python simulation
+	dut = sha1(tb_clk, tb_reset_n, tb_cs, tb_write_read, tb_address, tb_data_in, tb_data_out, tb_error)
 
-	dut = toVerilog(sha1, tb_clk, tb_reset_n, tb_cs, tb_write_read, tb_address, tb_data_in, tb_data_out, tb_error)
+	# Uncomment this line to generate verilog during simulation
+	# dut = toVerilog(sha1, tb_clk, tb_reset_n, tb_cs, tb_write_read, tb_address, tb_data_in, tb_data_out, tb_error)
 	
 	##----------------------------------------------------------------
 	## clk_gen

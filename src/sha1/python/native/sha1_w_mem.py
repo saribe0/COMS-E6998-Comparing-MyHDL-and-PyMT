@@ -104,11 +104,13 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	## W word selection logic. Returns either directly from the
 	## memory or the next w value calculated.
 	##----------------------------------------------------------------
-	@always(w_ctr_reg, w_tmp, w_new, w_mem[0], w_mem[1], w_mem[2], w_mem[3], w_mem[4], w_mem[5], w_mem[6], w_mem[7], 
-		w_mem[8], w_mem[9], w_mem[10], w_mem[11], w_mem[12], w_mem[13], w_mem[14], w_mem[15])
+	#@always(w_ctr_reg, w_tmp, w_new, w_mem[0], w_mem[1], w_mem[2], w_mem[3], w_mem[4], w_mem[5], w_mem[6], w_mem[7], 
+	#	w_mem[8], w_mem[9], w_mem[10], w_mem[11], w_mem[12], w_mem[13], w_mem[14], w_mem[15])
+	@always(w_ctr_reg, w_new, w_mem[0], w_mem[1], w_mem[2], w_mem[3], w_mem[4], w_mem[5], w_mem[6], w_mem[7],
+                w_mem[8], w_mem[9], w_mem[10], w_mem[11], w_mem[12], w_mem[13], w_mem[14], w_mem[15])
 	def select_w():
 		if (w_ctr_reg < 16):
-			w_tmp.next[:] = w_mem[int(w_ctr_reg[4:])]
+			w_tmp.next[:] = w_mem[w_ctr_reg[4:]]
 		else:
 			w_tmp.next[:] = w_new
 
@@ -119,11 +121,13 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	## Update logic for the W memory. This is where the scheduling
 	## based on a sliding window is implemented.
 	##----------------------------------------------------------------
-	@always(w_mem00_new, w_mem01_new, w_mem02_new, w_mem03_new, w_mem04_new,
-			w_mem05_new, w_mem06_new, w_mem07_new, w_mem08_new, w_mem09_new, w_mem10_new, w_mem11_new, 
-			w_mem12_new, w_mem13_new, w_mem14_new, w_mem15_new, w_mem_we, w_new, init, block, w_ctr_reg,
-			w_mem[1], w_mem[2], w_mem[3], w_mem[4], w_mem[5], w_mem[6], w_mem[7],
-	                w_mem[8], w_mem[9], w_mem[10], w_mem[11], w_mem[12], w_mem[13], w_mem[14], w_mem[15])
+	#@always(w_mem00_new, w_mem01_new, w_mem02_new, w_mem03_new, w_mem04_new,
+	#		w_mem05_new, w_mem06_new, w_mem07_new, w_mem08_new, w_mem09_new, w_mem10_new, w_mem11_new, 
+	#		w_mem12_new, w_mem13_new, w_mem14_new, w_mem15_new, w_mem_we, w_new, init, block, w_ctr_reg,
+	#		w_mem[1], w_mem[2], w_mem[3], w_mem[4], w_mem[5], w_mem[6], w_mem[7],
+	#                w_mem[8], w_mem[9], w_mem[10], w_mem[11], w_mem[12], w_mem[13], w_mem[14], w_mem[15])
+	@always(init, block, w_ctr_reg, w_new, w_mem[0], w_mem[1], w_mem[2], w_mem[3], w_mem[4], w_mem[5], w_mem[6], w_mem[7],
+                        w_mem[8], w_mem[9], w_mem[10], w_mem[11], w_mem[12], w_mem[13], w_mem[14], w_mem[15])
 	def w_mem_update_logic():
 			
 			w_0  = intbv(0)[32:]
@@ -203,7 +207,8 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	## W schedule adress counter. Counts from 0x10 to 0x3f and
 	## is used to expand the block into words.
 	##----------------------------------------------------------------
-	@always(w_ctr_new, w_ctr_we, w_ctr_rst, w_ctr_inc, w_ctr_reg)
+	#@always(w_ctr_new, w_ctr_we, w_ctr_rst, w_ctr_inc, w_ctr_reg)
+	@always(w_ctr_rst, w_ctr_inc, w_ctr_reg)
 	def w_ctr():
 		w_ctr_new.next[:] = 0
 		w_ctr_we.next  = 0
@@ -221,7 +226,8 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	##
 	## Logic for the w shedule FSM.
 	##----------------------------------------------------------------
-	@always(w_ctr_rst, w_ctr_inc, sha1_w_mem_ctrl_new, sha1_w_mem_ctrl_we, sha1_w_mem_ctrl_reg, init, next, w_ctr_reg, )
+	#@always(w_ctr_rst, w_ctr_inc, sha1_w_mem_ctrl_new, sha1_w_mem_ctrl_we, sha1_w_mem_ctrl_reg, init, next, w_ctr_reg)
+	@always(sha1_w_mem_ctrl_reg, init, next, w_ctr_reg)
 	def sha1_w_mem_fsm():
 		w_ctr_rst.next           = 0
 		w_ctr_inc.next           = 0

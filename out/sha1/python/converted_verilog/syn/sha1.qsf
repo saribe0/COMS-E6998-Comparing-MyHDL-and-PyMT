@@ -18,13 +18,31 @@
 #
 # Quartus Prime
 # Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
-# Date created = 16:06:04  April 19, 2018
+# Date created = 17:05:29  April 19, 2018
+#
+# -------------------------------------------------------------------------- #
+#
+# Notes:
+#
+# 1) The default values for assignments are stored in the file:
+#		sha1_assignment_defaults.qdf
+#    If this file doesn't exist, see file:
+#		assignment_defaults.qdf
+#
+# 2) Altera recommends that you do not modify this file. This
+#    file is updated automatically by the Quartus Prime software
+#    and any changes you make may be lost or overwritten.
 #
 # -------------------------------------------------------------------------- #
 
-QUARTUS_VERSION = "17.1"
-DATE = "16:06:04  April 19, 2018"
 
-# Revisions
+set_global_assignment -name FAMILY "Cyclone V"
+set_global_assignment -name DEVICE 5CGXFC7C7F23C8
+set_global_assignment -name TOP_LEVEL_ENTITY sha1
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 17.1.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "17:05:29  APRIL 19, 2018"
+set_global_assignment -name LAST_QUARTUS_VERSION "17.1.0 Lite Edition"
+set_global_assignment -name NUM_PARALLEL_PROCESSORS 2
 
-PROJECT_REVISION = "sha1"
+set_global_assignment -name SOURCE_FILE "/home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/my_tb_sha1.v"
+set_global_assignment -name SOURCE_FILE "/home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/sha1.v"

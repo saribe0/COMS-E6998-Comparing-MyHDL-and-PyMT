@@ -1,5 +1,5 @@
 Analysis & Synthesis report for sha1
-Thu Apr 19 16:06:19 2018
+Thu Apr 19 17:05:43 2018
 Quartus Prime Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
 
 
@@ -44,7 +44,7 @@ refer to the applicable agreement for further details.
 +-------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                  ;
 +---------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status     ; Successful - Thu Apr 19 16:06:19 2018       ;
+; Analysis & Synthesis Status     ; Successful - Thu Apr 19 17:05:43 2018       ;
 ; Quartus Prime Version           ; 17.1.0 Build 590 10/25/2017 SJ Lite Edition ;
 ; Revision Name                   ; sha1                                        ;
 ; Top-level Entity Name           ; sha1                                        ;
@@ -322,15 +322,15 @@ Info: Running Quartus Prime Analysis & Synthesis
     Info: the sole purpose of programming logic devices manufactured by
     Info: Intel and sold by Intel or its authorized distributors.  Please
     Info: refer to the applicable agreement for further details.
-    Info: Processing started: Thu Apr 19 16:06:05 2018
-Info: Command: quartus_map sha1 --source=/home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/tb_sha1.v --source=/home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/sha1.v
+    Info: Processing started: Thu Apr 19 17:05:29 2018
+Info: Command: quartus_map sha1 --source=/home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/my_tb_sha1.v --source=/home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/sha1.v
 Info (20034): Auto device selection is not supported for Cyclone V device family. The default device, 5CGXFC7C7F23C8, is set.
 Info (20032): Parallel compilation is enabled and will use up to 2 processors
-Info (12021): Found 1 design units, including 1 entities, in source file /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/tb_sha1.v
-    Info (12023): Found entity 1: tb_sha1 File: /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/tb_sha1.v Line: 38
+Info (12021): Found 1 design units, including 1 entities, in source file /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/my_tb_sha1.v
+    Info (12023): Found entity 1: tb_sha1 File: /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/my_tb_sha1.v Line: 38
 Info (12021): Found 1 design units, including 1 entities, in source file /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/sha1.v
     Info (12023): Found entity 1: sha1 File: /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/sha1.v Line: 8
-Warning (10236): Verilog HDL Implicit Net warning at tb_sha1.v(119): created implicit net for "tb_error" File: /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/tb_sha1.v Line: 119
+Warning (10236): Verilog HDL Implicit Net warning at my_tb_sha1.v(118): created implicit net for "tb_error" File: /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/my_tb_sha1.v Line: 118
 Info (12127): Elaborating entity "sha1" for the top level hierarchy
 Warning (10230): Verilog HDL assignment warning at sha1.v(257): truncated value with size 32 to match size of target (7) File: /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/sha1.v Line: 257
 Warning (10230): Verilog HDL assignment warning at sha1.v(356): truncated value with size 33 to match size of target (32) File: /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/sha1.v Line: 356
@@ -351,8 +351,8 @@ Info (21057): Implemented 2223 device resources after synthesis - the final reso
     Info (21059): Implemented 33 output pins
     Info (21061): Implemented 2146 logic cells
 Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 11 warnings
-    Info: Peak virtual memory: 1020 megabytes
-    Info: Processing ended: Thu Apr 19 16:06:19 2018
+    Info: Peak virtual memory: 1017 megabytes
+    Info: Processing ended: Thu Apr 19 17:05:43 2018
     Info: Elapsed time: 00:00:14
     Info: Total CPU time (on all processors): 00:00:20
 

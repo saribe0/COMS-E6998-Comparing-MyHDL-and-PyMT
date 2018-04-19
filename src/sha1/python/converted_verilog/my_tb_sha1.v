@@ -40,7 +40,7 @@ module tb_sha1();
   //----------------------------------------------------------------
   // Internal constant and parameter definitions.
   //----------------------------------------------------------------
-  parameter DEBUG_TOP  = 0;
+  parameter DEBUG_TOP = 0;
 
   parameter CLK_HALF_PERIOD = 5;
   parameter CLK_PERIOD = CLK_HALF_PERIOD * 2;

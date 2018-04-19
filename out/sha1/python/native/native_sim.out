@@ -1,0 +1,24 @@
+============================= test session starts ==============================
+platform linux2 -- Python 2.7.12, pytest-3.4.2, py-1.5.2, pluggy-0.6.0
+rootdir: /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/src/sha1/python/native, inifile:
+plugins: forked-0.2, xdist-1.22.2
+collected 1 item
+
+test_sha1.py 
+   -- Testbench for sha1 started --
+DUT name: sha1    
+DUT version: 0.60
+*** TC0 - Single block test started.
+TC0: OK.
+*** TC0 - Single block test done.
+*** TC0 - Double block test started.
+TC1 first block: OK.
+TC1 final block: OK.
+*** TC1 - Double block test done.
+*** All 2 test cases completed successfully.
+*** Simulation done. ***
+
+Simulation took 320 clock cycles.
+.
+
+=========================== 1 passed in 0.30 seconds ===========================
