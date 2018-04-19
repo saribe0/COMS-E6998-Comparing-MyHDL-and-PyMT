@@ -418,7 +418,7 @@ def bench():
 def test_bench():
 	tb = bench()
 	sim = Simulation(tb)
-	sim.run()
+	sim.run(1000)
 
 # For generating a waveform
 #tb = traceSignals(bench)

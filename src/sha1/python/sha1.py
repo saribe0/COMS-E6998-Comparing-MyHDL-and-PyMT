@@ -66,10 +66,22 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 	##----------------------------------------------------------------
 	@always_comb
 	def logic():
-		core_block.next[:] = ConcatSignal(block_reg[0], block_reg[1], block_reg[2], block_reg[3],
-											 block_reg[4], block_reg[5], block_reg[6], block_reg[7],
-											 block_reg[8], block_reg[9], block_reg[10], block_reg[11],
-											 block_reg[12], block_reg[13], block_reg[14], block_reg[15])
+		core_block.next[512:480] = block_reg[0]
+		core_block.next[480:448] = block_reg[1]
+		core_block.next[448:416] = block_reg[2]
+		core_block.next[416:384] = block_reg[3]
+		core_block.next[384:352] = block_reg[4]
+		core_block.next[352:320] = block_reg[5]
+		core_block.next[320:288] = block_reg[6]
+		core_block.next[288:256] = block_reg[7]
+		core_block.next[256:224] = block_reg[8]
+		core_block.next[224:192] = block_reg[9]
+		core_block.next[192:160] = block_reg[10]
+		core_block.next[160:128] = block_reg[11]
+		core_block.next[128: 96] = block_reg[12]
+		core_block.next[96 : 64] = block_reg[13]
+		core_block.next[64 : 32] = block_reg[14]
+		core_block.next[32 :  0] = block_reg[15])
 		read_data.next[:] = tmp_read_data
 		error.next = tmp_error
 
@@ -95,10 +107,10 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 			ready_reg.next = 0
 			digest_reg.next[:] = 0
 			digest_valid_reg.next = 0
-
+		
 			for i in range(16):
 				block_reg[i].next[:] = 0
-
+		
 		else:
 			ready_reg.next = core_ready
 			digest_valid_reg.next = core_digest_valid
@@ -109,7 +121,7 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 
 			if core_digest_valid:
 				digest_reg.next[:] = core_digest
-
+		
 	##----------------------------------------------------------------
 	## api
 	##
@@ -125,7 +137,8 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 		next_new.next	 	= 0
 		block_we.next	 	= 0
 		tmp_read_data.next[:] 	= 0
-		tmp_error.next    	= 0
+		tmp_error.next    	= 0 
+	 	
 		if cs:
 			# Write
 			if we:
@@ -139,8 +152,19 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 				if ((address >= ADDR_BLOCK0) and (address <= ADDR_BLOCK15)):
 					tmp_read_data.next[:] = block_reg[address[3 : 0]];
 				if ((address >= ADDR_DIGEST0) and (address <= ADDR_DIGEST4)):
-					tmp_offset = intbv((4 - (address - ADDR_DIGEST0)) * 32 + 32, min=0, max=159)
-					tmp_read_data.next[:] = digest_reg[tmp_offset : (4 - (address - ADDR_DIGEST0)) * 32];
+					if (address == 0x20):
+						tmp_read_data.next[:] = digest_reg[160:128]
+					if (address == 0x21):
+                                                tmp_read_data.next[:] = digest_reg[128: 96]
+					if (address == 0x22):
+                                                tmp_read_data.next[:] = digest_reg[96 : 64]
+					if (address == 0x23):
+                                                tmp_read_data.next[:] = digest_reg[64 : 32]
+					if (address == 0x24):
+                                                tmp_read_data.next[:] = digest_reg[32 :  0]
+
+					#tmp_offset = intbv((4 - (address - ADDR_DIGEST0)) * 32 + 32, min=0, max=159)
+					#tmp_read_data.next[:] = digest_reg[tmp_offset : (4 - (address - ADDR_DIGEST0)) * 32];
 
 				if address == ADDR_NAME0:
 					tmp_read_data.next[:] = CORE_NAME0
@@ -149,12 +173,16 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 				elif address == ADDR_VERSION:
 					tmp_read_data.next[:] = CORE_VERSION
 				elif address == ADDR_CTRL:
-					tmp_read_data.next[:] = ConcatSignal(Signal(intbv(0)[31]), next_reg, init_reg)
+					tmp_read_data.next[32:2] = 0
+					tmp_read_data.next[2 :1] = next_reg
+					tmp_read_data.next[1 :0] = init_reg
 				elif address == ADDR_STATUS:
-					tmp_read_data.next[:] = ConcatSignal(Signal(intbv(0)[31]), digest_valid_reg, ready_reg)
+					tmp_read_data.next[32:2] = 0
+					tmp_read_data.next[2 :1] = digest_valid_reg
+					tmp_read_data.next[1 :0] = ready_reg
 				else:
 					tmp_error.next = 1
-
+		
 	return core, api, reg_update, logic
 ##======================================================================
 ## EOF sha1.v

@@ -56,7 +56,7 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	@always_comb
 	def logic():
 		w.next[:] = w_tmp
-
+	
 
 	##----------------------------------------------------------------
 	## reg_update
@@ -97,7 +97,7 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 
 			if (sha1_w_mem_ctrl_we):
 				sha1_w_mem_ctrl_reg.next = sha1_w_mem_ctrl_new
-
+	
 	##----------------------------------------------------------------
 	## select_w
 	##
@@ -122,15 +122,16 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	@always(w_mem00_new, w_mem01_new, w_mem02_new, w_mem03_new, w_mem04_new,
 			w_mem05_new, w_mem06_new, w_mem07_new, w_mem08_new, w_mem09_new, w_mem10_new, w_mem11_new, 
 			w_mem12_new, w_mem13_new, w_mem14_new, w_mem15_new, w_mem_we, w_new, init, block, w_ctr_reg,
-			w_mem[0], w_mem[1], w_mem[2], w_mem[3], w_mem[4], w_mem[5], w_mem[6], w_mem[7],
+			w_mem[1], w_mem[2], w_mem[3], w_mem[4], w_mem[5], w_mem[6], w_mem[7],
 	                w_mem[8], w_mem[9], w_mem[10], w_mem[11], w_mem[12], w_mem[13], w_mem[14], w_mem[15])
 	def w_mem_update_logic():
-			w_0 = intbv()[32:]
-			w_2 = intbv()[32:]
-			w_8 = intbv()[32:]
-			w_13 = intbv()[32:]
-			w_16 = intbv()[32:]
-
+			
+			w_0  = intbv(0)[32:]
+			w_2  = intbv(0)[32:]
+			w_8  = intbv(0)[32:]
+			w_13 = intbv(0)[32:]
+			w_16 = intbv(0)[32:]
+			
 			w_mem00_new.next[:] = 0
 			w_mem01_new.next[:] = 0
 			w_mem02_new.next[:] = 0
@@ -154,8 +155,9 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 			w_8[:]   = w_mem[8]
 			w_13[:]  = w_mem[13]
 			w_16[:]  = w_13 ^ w_8 ^ w_2 ^ w_0
-			w_new.next[:] = ConcatSignal(w_16[31 : 0], w_16[32 : 31])
-
+			w_new.next[32:1] = w_16[31: 0]
+			w_new.next[1 :0] = w_16[32:31]
+			
 			if (init):
 					w_mem00_new.next[:] = block[512 : 480]
 					w_mem01_new.next[:] = block[480 : 448]

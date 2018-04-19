@@ -87,7 +87,11 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	@always_comb
 	def logic():
 		ready.next = ready_flag
-		digest.next[:] = ConcatSignal(H0_reg, H1_reg, H2_reg, H3_reg, H4_reg)
+		digest.next[160:128] = H0_reg
+		digest.next[128: 96] = H1_reg
+		digest.next[96 : 64] = H2_reg
+		digest.next[64 : 32] = H3_reg
+		digest.next[32 :  0] = H4_reg
 		digest_valid.next = digest_valid_reg
 
 	##----------------------------------------------------------------
@@ -218,12 +222,14 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 				k[:] = 0xca62c1d6
 				f[:] = b_reg ^ c_reg ^ d_reg
 
-			a5[:] = ConcatSignal(a_reg[27 : 0], a_reg[32 : 27])
+			a5[32:5] = a_reg[27: 0]
+			a5[5 :0] = a_reg[32:27]
 			t[:] = a5 + e_reg + f + k + w
 
 			a_new.next[:]  = t
 			b_new.next[:]  = a_reg
-			c_new.next[:]  = ConcatSignal(b_reg[2 : 0], b_reg[32 : 2])
+			c_new.next[32:30] = b_reg[2 : 0]
+			c_new.next[30: 0] = b_reg[32 : 2]
 			d_new.next[:]  = c_reg
 			e_new.next[:]  = d_reg
 			a_e_we.next = 1
@@ -311,7 +317,7 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 				sha1_ctrl_new.next[:]     = CTRL_IDLE
 				sha1_ctrl_we.next      = 1
 
-	return logic, reg_update, w_mem_inst, digest_logic, state_logic, round_ctr, sha1_ctrl_fsm
+	return w_mem_inst, logic, reg_update, digest_logic, state_logic, round_ctr, sha1_ctrl_fsm
 
 ##======================================================================
 ## EOF sha1_core.v
