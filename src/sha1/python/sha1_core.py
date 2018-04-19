@@ -121,7 +121,6 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 				e_reg.next[:] = e_new
 
 			if H_we:
-				print 'Digest Parts ----------------> %x, %x, %x' % (H0_new, H2_new, H4_new)
 				H0_reg.next[:] = H0_new
 				H1_reg.next[:] = H1_new
 				H2_reg.next[:] = H2_new
@@ -135,7 +134,6 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 				digest_valid_reg.next = digest_valid_new
 
 			if sha1_ctrl_we:
-				print 'writing %d' % sha1_ctrl_new
 				sha1_ctrl_reg.next[:] = sha1_ctrl_new
 
 
@@ -154,7 +152,6 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 		H_we.next = 0
 
 		if (digest_init):
-			print '~~~~~~~~~~~~~~~~~~~~~~Digest Init'
 			H0_new.next[:] = H0_0
 			H1_new.next[:] = H0_1
 			H2_new.next[:] = H0_2
@@ -274,13 +271,10 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 		digest_valid_we.next  = 0
 		sha1_ctrl_new.next[:] = CTRL_IDLE
 		sha1_ctrl_we.next     = 0
-		print '%d - finite state, ctr is: %d, %d' % (clk, sha1_ctrl_reg, digest_init)
 		if sha1_ctrl_reg == CTRL_IDLE:
 
 			ready_flag.next = 1
-			print "init or next recieved"
 			if (init):
-				print 'init-ing'
 				digest_init.next      = 1
 				w_init.next           = 1
 				state_init.next       = 1
@@ -292,7 +286,6 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 				sha1_ctrl_we.next     = 1
 
 			if (next):
-				print 'next-ing'
 				w_init.next           = 1
 				state_init.next       = 1
 				round_ctr_rst.next    = 1
@@ -302,7 +295,6 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 				sha1_ctrl_we.next     = 1
 
 		elif sha1_ctrl_reg == CTRL_ROUNDS:
-				print 'setting NEXTTTTTTT'
 				state_update.next   = 1
 				round_ctr_inc.next  = 1
 				w_next.next         = 1

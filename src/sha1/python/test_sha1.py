@@ -87,7 +87,7 @@ def bench():
 	@always(delay(CLK_HALF_PERIOD))
 	def clk_gen():
 		tb_clk.next = not tb_clk
-		print 'clok = %d' %tb_clk
+		# print 'clok = %d' %tb_clk
 
 
 	##----------------------------------------------------------------
@@ -135,10 +135,12 @@ def bench():
 	##----------------------------------------------------------------
 	def display_test_result():
 		if (error_ctr == 0):
-			print "*** All %d test cases completed successfully." % int(tc_ctr)
+			# print "*** All %d test cases completed successfully." % int(tc_ctr)
+			pass
 		else:
-			print "*** %d test cases completed." % int(tc_ctr)
-			print "*** %d errors detected during testing." % int(error_ctr)
+			# print "*** %d test cases completed." % int(tc_ctr)
+			# print "*** %d errors detected during testing." % int(error_ctr)
+			pass
 	
 
 	
@@ -177,8 +179,9 @@ def bench():
 		tb_cs.next = 0
 		
 		if DEBUG_TOP:
-			print "*** Reading 0x%x from 0x%x." % (read_data, address)
-			print ""
+			# print "*** Reading 0x%x from 0x%x." % (read_data, address)
+			# print ""
+			pass
 	
 		
 	##----------------------------------------------------------------
@@ -189,8 +192,9 @@ def bench():
 	def write_word(address, word):
 		
 		if DEBUG_TOP:
-			print "*** Writing 0x%x to 0x%x." % (word, address)
-			print ""
+			# print "*** Writing 0x%x to 0x%x." % (word, address)
+			# print ""
+			pass
 		
 		tb_address.next[:] = address
 		tb_data_in.next[:] = word
@@ -249,8 +253,8 @@ def bench():
 		yield read_word(ADDR_VERSION)
 		version[:] = read_data
 
-		print "DUT name: %c%c%c%c%c%c%c%c" % (name0[31 : 24], name0[23 : 16], name0[15 : 8], name0[7 : 0], name1[31 : 24], name1[23 : 16], name1[15 : 8], name1[7 : 0])
-                print "DUT version: %c%c%c%c" % (version[31 : 24], version[23 : 16], version[15 : 8], version[7 : 0])
+		# print "DUT name: %c%c%c%c%c%c%c%c" % (name0[31 : 24], name0[23 : 16], name0[15 : 8], name0[7 : 0], name1[31 : 24], name1[23 : 16], name1[15 : 8], name1[7 : 0])
+        # print "DUT version: %c%c%c%c" % (version[31 : 24], version[23 : 16], version[15 : 8], version[7 : 0])
 		
 	
 	##----------------------------------------------------------------
@@ -271,7 +275,6 @@ def bench():
 		digest_data.next[64  :  32] = read_data;
 		yield read_word(ADDR_DIGEST4)
 		digest_data.next[32  :   0] = read_data;
-		#yield delay(CLK_PERIOD)
 
 
 	##----------------------------------------------------------------
@@ -281,7 +284,7 @@ def bench():
 	## Perform test of a single block digest.
 	##----------------------------------------------------------------
 	def single_block_test(block, expected):
-		print "*** TC%d - Single block test started." % tc_ctr
+		# print "*** TC%d - Single block test started." % tc_ctr
 
 		yield write_block(block)
 		yield write_word(ADDR_CTRL, CTRL_INIT_VALUE)
@@ -292,14 +295,15 @@ def bench():
 		yield read_digest()
 
 		if (digest_data == expected):
-			print "TC%d: OK." % tc_ctr
+			# print "TC%d: OK." % tc_ctr
+			pass
 		else:
-			print "TC%d: ERROR." % tc_ctr
-			print "TC%d: Expected: 0x%x" % (tc_ctr, expected)
-			print "TC%d: Got:      0x%x" % (tc_ctr, digest_data)
+			# print "TC%d: ERROR." % tc_ctr
+			# print "TC%d: Expected: 0x%x" % (tc_ctr, expected)
+			# print "TC%d: Got:      0x%x" % (tc_ctr, digest_data)
 			error_ctr.next[:] = error_ctr + 1;
 		
-		print "*** TC%d - Single block test done." % tc_ctr
+		# print "*** TC%d - Single block test done." % tc_ctr
 		tc_ctr.next[:] = tc_ctr + 1;
 
 	
@@ -312,7 +316,7 @@ def bench():
 	##----------------------------------------------------------------
 	def double_block_test(block0, expected0, block1, expected1):
 
-		print "*** TC%d - Double block test started." % tc_ctr
+		# print "*** TC%d - Double block test started." % tc_ctr
 
 		## First block
 		yield write_block(block0)
@@ -324,12 +328,12 @@ def bench():
 		yield read_digest()
 
 		if (digest_data == expected0):
-			print "TC%d first block: OK." % tc_ctr
+			# print "TC%d first block: OK." % tc_ctr
 			pass
 		else:
-			print "TC%d: ERROR in first digest" % tc_ctr
-			print "TC%d: Expected: 0x%x", (tc_ctr, expected0)
-			print "TC%d: Got:      0x%x", (tc_ctr, digest_data)
+			# print "TC%d: ERROR in first digest" % tc_ctr
+			# print "TC%d: Expected: 0x%x", (tc_ctr, expected0)
+			# print "TC%d: Got:      0x%x", (tc_ctr, digest_data)
 			error_ctr.next[:] = error_ctr + 1;
 
 		## Final block
@@ -342,15 +346,15 @@ def bench():
 		yield read_digest()
 
 		if (digest_data == expected1):
-			print "TC%d final block: OK." % tc_ctr
+			# print "TC%d final block: OK." % tc_ctr
 			pass
 		else:
-			print "TC%d: ERROR in final digest"% tc_ctr
-			print "TC%d: Expected: 0x%040x" % (tc_ctr, expected1)
-			print "TC%d: Got:      0x%040x" % (tc_ctr, digest_data)
+			# print "TC%d: ERROR in final digest"% tc_ctr
+			# print "TC%d: Expected: 0x%040x" % (tc_ctr, expected1)
+			# print "TC%d: Got:      0x%040x" % (tc_ctr, digest_data)
 			error_ctr.next[:] = error_ctr + 1;
 
-		print "*** TC%d - Double block test done." % tc_ctr
+		# print "*** TC%d - Double block test done." % tc_ctr
 		tc_ctr.next[:] = tc_ctr + 1;
 	
 
@@ -363,8 +367,8 @@ def bench():
 	##----------------------------------------------------------------
 	@instance
 	def check():
-		print ""
-		print "   -- Testbench for sha1 started --"
+		# print ""
+		# print "   -- Testbench for sha1 started --"
 
 		# Initialize the system
 		init_sim()
@@ -399,9 +403,9 @@ def bench():
                 # Display results and finish up
 		yield delay(CLK_PERIOD)
 		display_test_result()
-		print "*** Simulation done. ***"
+		# print "*** Simulation done. ***"
 
-		print "\nSimulation took %d clock cycles." % cycle_ctr
+		# print "\nSimulation took %d clock cycles." % cycle_ctr
 		raise StopSimulation
 
 	return dut, check, clk_gen, sys_monitor
@@ -416,6 +420,7 @@ def test_bench():
 	sim = Simulation(tb)
 	sim.run()
 
+# For generating a waveform
 #tb = traceSignals(bench)
 #sim = Simulation(tb)
 #sim.run()

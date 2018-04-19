@@ -75,7 +75,6 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 
 		else:
 			if (w_mem_we):
-				print '================================== %x, %x' % (w_mem00_new, w_mem15_new)
 				w_mem[0].next[:] = w_mem00_new
 				w_mem[1].next[:] = w_mem01_new
 				w_mem[2].next[:] = w_mem02_new
@@ -98,8 +97,6 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 
 			if (sha1_w_mem_ctrl_we):
 				sha1_w_mem_ctrl_reg.next = sha1_w_mem_ctrl_new
-
-			print 'Memories: %x %x %x %x %x %x' % (w_mem[0], w_mem[1], w_mem[2], w_mem[3], w_mem[4], w_mem[5])
 
 	##----------------------------------------------------------------
 	## select_w
@@ -160,11 +157,6 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 			w_new.next[:] = ConcatSignal(w_16[31 : 0], w_16[32 : 31])
 
 			if (init):
-					print 'mem-init : %x' % block[512:480]
-					print 'mem-init : %x' % block[480:448]
-					print 'mem-init : %x' % block[448:416]
-					print 'mem-init : %x' % block[416:384]
-					print 'whole_block %x' % block
 					w_mem00_new.next[:] = block[512 : 480]
 					w_mem01_new.next[:] = block[480 : 448]
 					w_mem02_new.next[:] = block[448 : 416]
@@ -213,9 +205,7 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	def w_ctr():
 		w_ctr_new.next[:] = 0
 		w_ctr_we.next  = 0
-		print 'w_ctr: %d ' % w_ctr_new
 		if (w_ctr_rst):
-			print 'w_ctr_rst is valid'
 			w_ctr_new.next[:] = 0
 			w_ctr_we.next  = 1
 
@@ -235,18 +225,15 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 		w_ctr_inc.next           = 0
 		sha1_w_mem_ctrl_new.next = CTRL_IDLE
 		sha1_w_mem_ctrl_we.next  = 0
-		print 'w_ctr_rst : %d' % w_ctr_rst
 		if sha1_w_mem_ctrl_reg == CTRL_IDLE:
 			if (init):
 				w_ctr_rst.next           = 1
 				sha1_w_mem_ctrl_new.next = CTRL_UPDATE
 				sha1_w_mem_ctrl_we.next  = 1
-				print 'should be init in mem fsm'
 
 		elif sha1_w_mem_ctrl_reg == CTRL_UPDATE:
 			if (next):
 				w_ctr_inc.next = 1
-			print 'Controller Update - %d' % next
 			if (w_ctr_reg == SHA1_ROUNDS):
 				sha1_w_mem_ctrl_new.next = CTRL_IDLE
 				sha1_w_mem_ctrl_we.next  = 1

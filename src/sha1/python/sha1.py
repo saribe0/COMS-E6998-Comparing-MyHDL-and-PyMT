@@ -70,8 +70,6 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 											 block_reg[4], block_reg[5], block_reg[6], block_reg[7],
 											 block_reg[8], block_reg[9], block_reg[10], block_reg[11],
 											 block_reg[12], block_reg[13], block_reg[14], block_reg[15])
-		print "core block: %x" % core_block
-		print "core in: %x %x %x %x" % (block_reg[0], block_reg[1], block_reg[2], block_reg[3])
 		read_data.next[:] = tmp_read_data
 		error.next = tmp_error
 
@@ -106,13 +104,10 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 			digest_valid_reg.next = core_digest_valid
 			init_reg.next = init_new
 			next_reg.next = next_new
-			print 'init reg will be set to: %d' % init_new
 			if block_we:
-				print 'Writing %x to %d' % (write_data, int(address[4:]))
 				block_reg[int(address[4:])].next[:] = write_data
 
 			if core_digest_valid:
-				print 'digest should be valid %x' % core_digest
 				digest_reg.next[:] = core_digest
 
 	##----------------------------------------------------------------
@@ -131,7 +126,6 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 		block_we.next	 	= 0
 		tmp_read_data.next[:] 	= 0
 		tmp_error.next    	= 0
-		print "test"
 		if cs:
 			# Write
 			if we:
@@ -144,8 +138,6 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 			else:
 				if ((address >= ADDR_BLOCK0) and (address <= ADDR_BLOCK15)):
 					tmp_read_data.next[:] = block_reg[address[3 : 0]];
-				print '-------- Reading from: %x' % address
-				#tmp_offset = (4 - (address - ADDR_DIGEST0)) * 32 - 32
 				if ((address >= ADDR_DIGEST0) and (address <= ADDR_DIGEST4)):
 					tmp_offset = (4 - (address - ADDR_DIGEST0)) * 32 + 32
 					tmp_read_data.next[:] = digest_reg[tmp_offset : (4 - (address - ADDR_DIGEST0)) * 32];
@@ -160,8 +152,6 @@ def sha1(clk, reset_n, cs, we, address, write_data, read_data, error):
 					tmp_read_data.next[:] = ConcatSignal(Signal(intbv(0)[31]), next_reg, init_reg)
 				elif address == ADDR_STATUS:
 					tmp_read_data.next[:] = ConcatSignal(Signal(intbv(0)[31]), digest_valid_reg, ready_reg)
-					print 'digest valid: %x' % digest_valid_reg
-					print 'ready_reg: %x' % ready_reg
 				else:
 					tmp_error.next = 1
 
