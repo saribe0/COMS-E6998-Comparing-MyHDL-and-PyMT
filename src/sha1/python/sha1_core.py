@@ -96,7 +96,7 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	## All registers are positive edge triggered with
 	## asynchronous active low reset.
 	##----------------------------------------------------------------
-	@always(clk.posedge or reset_n.negedge)
+	@always(clk.posedge, reset_n.negedge)
 	def reg_update():
 		if not reset_n:
 			a_reg.next = 0 
@@ -133,7 +133,9 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 			if digest_valid_we:
 				digest_valid_reg.next = digest_valid_new
 
+			print 'ctrl enabled -----> %d' % sha1_ctrl_we
 			if sha1_ctrl_we:
+				print 'writing %d' % sha1_ctrl_new
 				sha1_ctrl_reg.next = sha1_ctrl_new
 
 
@@ -175,10 +177,10 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 	##----------------------------------------------------------------
 	@always(a_new, b_new, c_new, d_new, e_new, a_e_we, state_update, round_ctr_reg, a_reg, b_reg, c_reg, d_reg)
 	def state_logic():
-		a5 = Signal(intbv(0)[32:])
-		f  = Signal(intbv(0)[32:])
-		k  = Signal(intbv(0)[32:])
-		t  = Signal(intbv(0)[32:])
+		a5 = Signal(modbv(0)[32:])
+		f  = Signal(modbv(0)[32:])
+		k  = Signal(modbv(0)[32:])
+		t  = Signal(modbv(0)[32:])
 
 		a_new.next[:] = 0
 		b_new.next[:] = 0
@@ -257,13 +259,13 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 		sha1_ctrl_we, sha1_ctrl_reg, init, round_ctr_reg)
 	def sha1_ctrl_fsm():
 		digest_init.next      = 0
-		digest_update .next    = 0
-		state_init .next       = 0
-		state_update .next     = 0
-		first_block .next      = 0
-		ready_flag .next       = 0
-		w_init .next           = 0
-		w_next .next           = 0
+		digest_update.next    = 0
+		state_init.next       = 0
+		state_update.next     = 0
+		first_block.next      = 0
+		ready_flag.next       = 0
+		w_init.next           = 0
+		w_next.next           = 0
 		round_ctr_inc.next   = 0
 		round_ctr_rst.next    = 0
 		digest_valid_new.next = 0
@@ -273,24 +275,24 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 		print 'finite state, ctr is: %d' % sha1_ctrl_reg
 		if sha1_ctrl_reg == CTRL_IDLE:
 
-			ready_flag .next = 1
+			ready_flag.next = 1
 			print "init or next recieved"
 			if (init):
 				print 'init-ing'
-				digest_init .next      = 1
-				w_init .next           = 1
-				state_init .next       = 1
-				first_block .next      = 1
-				round_ctr_rst .next    = 1
-				digest_valid_new.next[:] = 0
+				digest_init.next      = 1
+				w_init.next           = 1
+				state_init.next       = 1
+				first_block.next      = 1
+				round_ctr_rst.next    = 1
+				digest_valid_new.next = 0
 				digest_valid_we.next  = 1
-				sha1_ctrl_new.next[:]    = CTRL_ROUNDS
+				sha1_ctrl_new.next[:] = CTRL_ROUNDS
 				sha1_ctrl_we.next     = 1
 
 			if (next):
 				print 'next-ing'
-				w_init .next           = 1
-				state_init .next       = 1
+				w_init.next           = 1
+				state_init.next       = 1
 				round_ctr_rst.next    = 1
 				digest_valid_new.next = 0
 				digest_valid_we.next  = 1
@@ -299,9 +301,10 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 
 
 		elif sha1_ctrl_reg == CTRL_ROUNDS:
-				state_update .next   = 1
+				print 'setting NEXTTTTTTT'
+				state_update.next   = 1
 				round_ctr_inc.next  = 1
-				w_next .next         = 1
+				w_next.next         = 1
 
 				if (round_ctr_reg == SHA1_ROUNDS):
 					sha1_ctrl_new.next[:]  = CTRL_DONE
@@ -309,7 +312,7 @@ def sha1_core(clk, reset_n, init, next, block, ready, digest, digest_valid):
 
 
 		elif sha1_ctrl_reg == CTRL_DONE:
-				digest_update .next     = 1
+				digest_update.next     = 1
 				digest_valid_new.next  = 1
 				digest_valid_we.next   = 1
 				sha1_ctrl_new.next[:]     = CTRL_IDLE

@@ -155,25 +155,26 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 			w_8[:]   = w_mem[8]
 			w_13[:]  = w_mem[13]
 			w_16[:]  = w_13 ^ w_8 ^ w_2 ^ w_0
-			w_new.val[:] = ConcatSignal(w_16[31 : 0], w_16[32 : 31])
+			w_new.next[:] = ConcatSignal(w_16[31 : 0], w_16[32 : 31])
 
 			if (init):
-					w_mem00_new.next[:] = block[511 : 480]
-					w_mem01_new.next[:] = block[479 : 448]
-					w_mem02_new.next[:] = block[447 : 416]
-					w_mem03_new.next[:] = block[415 : 384]
-					w_mem04_new.next[:] = block[383 : 352]
-					w_mem05_new.next[:] = block[351 : 320]
-					w_mem06_new.next[:] = block[319 : 288]
-					w_mem07_new.next[:] = block[287 : 256]
-					w_mem08_new.next[:] = block[255 : 224]
-					w_mem09_new.next[:] = block[223 : 192]
-					w_mem10_new.next[:] = block[191 : 160]
-					w_mem11_new.next[:] = block[159 : 128]
-					w_mem12_new.next[:] = block[127 :  96]
-					w_mem13_new.next[:] = block[95  :  64]
-					w_mem14_new.next[:] = block[63  :  32]
-					w_mem15_new.next[:] = block[31  :   0]
+					print 'mem-init : 0%x' % block[512:480]
+					w_mem00_new.next[:] = block[512 : 480]
+					w_mem01_new.next[:] = block[480 : 448]
+					w_mem02_new.next[:] = block[448 : 416]
+					w_mem03_new.next[:] = block[416 : 384]
+					w_mem04_new.next[:] = block[384 : 352]
+					w_mem05_new.next[:] = block[352 : 320]
+					w_mem06_new.next[:] = block[320 : 288]
+					w_mem07_new.next[:] = block[288 : 256]
+					w_mem08_new.next[:] = block[256 : 224]
+					w_mem09_new.next[:] = block[224 : 192]
+					w_mem10_new.next[:] = block[192 : 160]
+					w_mem11_new.next[:] = block[160 : 128]
+					w_mem12_new.next[:] = block[128 :  96]
+					w_mem13_new.next[:] = block[96  :  64]
+					w_mem14_new.next[:] = block[64  :  32]
+					w_mem15_new.next[:] = block[32  :   0]
 					w_mem_we.next   = 1
 
 			elif (w_ctr_reg > 15):
@@ -206,8 +207,9 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 	def w_ctr():
 		w_ctr_new.next[:] = 0
 		w_ctr_we.next  = 0
-
+		print 'w_ctr: %d ' % w_ctr_new
 		if (w_ctr_rst):
+			print 'w_ctr_rst is valid'
 			w_ctr_new.next[:] = 0
 			w_ctr_we.next  = 1
 
@@ -227,17 +229,18 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 		w_ctr_inc.next           = 0
 		sha1_w_mem_ctrl_new.next = CTRL_IDLE
 		sha1_w_mem_ctrl_we.next  = 0
-
+		print 'w_ctr_rst : %d' % w_ctr_rst
 		if sha1_w_mem_ctrl_reg == CTRL_IDLE:
 			if (init):
 				w_ctr_rst.next           = 1
 				sha1_w_mem_ctrl_new.next = CTRL_UPDATE
 				sha1_w_mem_ctrl_we.next  = 1
+				print 'should be init in mem fsm'
 
 		if sha1_w_mem_ctrl_reg == CTRL_UPDATE:
 			if (next):
 				w_ctr_inc.next = 1
-
+			print 'Controller Update - %d' % next
 			if (w_ctr_reg == SHA1_ROUNDS):
 				sha1_w_mem_ctrl_new.next = CTRL_IDLE
 				sha1_w_mem_ctrl_we.next  = 1
