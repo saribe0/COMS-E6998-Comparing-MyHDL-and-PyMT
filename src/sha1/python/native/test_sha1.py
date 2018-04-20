@@ -1,5 +1,6 @@
 from myhdl import *
 from sha1 import sha1
+from time import time
 
 def bench():
 
@@ -418,9 +419,11 @@ def bench():
 
 
 def test_bench():
+	start = time()
 	tb = bench()
 	sim = Simulation(tb)
 	sim.run()
+	print time() - start
 
 # For generating a waveform
 #tb = traceSignals(bench)

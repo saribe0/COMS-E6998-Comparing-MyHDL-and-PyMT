@@ -49,7 +49,7 @@ sim-gui: sim-compile
 	vsim $(SIMTOP)
 
 sim: sim-compile
-	vsim -c -do "run -a" $(SIMTOP) | tee sim.out
+	vsim -c -do "set t [clock milliseconds]; run -a; set t2 [clock milliseconds];" $(SIMTOP) | tee sim.out
 
 syn:
 	BUILD_PATH=$(SYN_PATH) TOP=$(TOP) NUM_PROCESSORS=$(NUM_PROCESSORS) FAMILY=$(FAMILY) quartus_sh -t $(SCRIPTS_PATH)/q_syn.tcl
