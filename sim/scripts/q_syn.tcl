@@ -25,10 +25,6 @@ if {[info exists env(SOURCE_FILES)]} {
     exit -1
 }
 
-if {![info exists $env(BUILD_PATH)]} {
-    set BUILD_PATH "./syn"
-}
-
 # Enter the build path
 file mkdir ${BUILD_PATH}
 cd ${BUILD_PATH}

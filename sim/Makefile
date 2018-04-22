@@ -27,11 +27,14 @@ help:
 	@echo " Synthesize and simulate Verilog/VHDL with Quartus and ModelSim "
 	@echo " ============================================================== "
 	@echo
-	@echo " == Synthesis == "
-	@echo
 	@echo " make syn 		: Synthesize the currently defined design"
 	@echo
+	@echo " make sim 		: Simulate the design using ModelSim command line"
+	@echo 
+	@echo " make sim-gui		: Simulate the design using ModelSim's GUI"
+	@echo
 	@echo " make clean 		: Cleans everything Quartus related"
+	@echo
 
 sim-compile:
 	mkdir -p $(SIM_PATH)
@@ -52,6 +55,8 @@ sim: sim-compile
 	vsim -c -do "set t [clock milliseconds]; run -a; set t2 [clock milliseconds];" $(SIMTOP) | tee sim.out
 
 syn:
+	mkdir -p $(SYN_PATH)
+	cp template.sdc $(SYN_PATH)/$(TOP).sdc
 	BUILD_PATH=$(SYN_PATH) TOP=$(TOP) NUM_PROCESSORS=$(NUM_PROCESSORS) FAMILY=$(FAMILY) quartus_sh -t $(SCRIPTS_PATH)/q_syn.tcl
 
 clean:
