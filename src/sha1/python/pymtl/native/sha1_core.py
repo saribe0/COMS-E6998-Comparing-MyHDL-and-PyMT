@@ -3,22 +3,20 @@ from sha1_w_mem import sha1_w_mem
 
 class sha1_core( Model ):
 
-    H0_0 = 0x67452301   # intbv(1732584193)[32:]    # 320x67452301
-    H0_1 = 0xefcdab89   # intbv(4023233417)[32:]    # 320xefcdab89
-    H0_2 = 0x98badcfe   # intbv(2562383102)[32:]    # 320x98badcfe
-    H0_3 = 0x10325476   # intbv(271733878)[32:]     # 320x10325476
-    H0_4 = 0xc3d2e1f0   # intbv(3285377520)[32:]    # 320xc3d2e1f0
-
-    SHA1_ROUNDS = 79
-
-    CTRL_IDLE   = 0
-    CTRL_ROUNDS = 1
-    CTRL_DONE   = 2
-
     # Constructor
     def __init__( s ):
+        
+        H0_0 = 0x67452301   # intbv(1732584193)[32:]    # 320x67452301
+        H0_1 = 0xefcdab89   # intbv(4023233417)[32:]    # 320xefcdab89
+        H0_2 = 0x98badcfe   # intbv(2562383102)[32:]    # 320x98badcfe
+        H0_3 = 0x10325476   # intbv(271733878)[32:]     # 320x10325476
+        H0_4 = 0xc3d2e1f0   # intbv(3285377520)[32:]    # 320xc3d2e1f0
 
-	CTRL_IDLE = 0
+        SHA1_ROUNDS = 79
+
+        CTRL_IDLE   = 0
+        CTRL_ROUNDS = 1
+        CTRL_DONE   = 2
 
         s.reset_n = InPort (Bits(1))
 

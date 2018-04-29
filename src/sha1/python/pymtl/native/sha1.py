@@ -3,52 +3,30 @@ from sha1_core import sha1_core
 
 class sha1( Model ):
 
-    ADDR_NAME0       = 0x00  #intbv(0)[8:] # 8'h00;
-    ADDR_NAME1       = 0x01  #intbv(1)[8:] # 8'h01;
-    ADDR_VERSION     = 0x02  #intbv(2)[8:] # 8'h02;
-
-    ADDR_CTRL        = 0x08  #intbv(8)[8:] # 8'h08;
-    CTRL_INIT_BIT    = 0
-    CTRL_NEXT_BIT    = 1
-
-    ADDR_STATUS      = 0x09  #intbv(9)[8:] # 8'h09;
-    STATUS_READY_BIT = 0
-    STATUS_VALID_BIT = 1
-
-    ADDR_BLOCK0    = 0x10    #intbv(16)[8:] # 8'h10;
-    ADDR_BLOCK15   = 0x1f    #intbv(31)[8:] # 8'h1f;
-
-    ADDR_DIGEST0   = 0x20    #intbv(32)[8:] # 8'h20;
-    ADDR_DIGEST4   = 0x24    #intbv(36)[8:] # 8'h24;
-
-    CORE_NAME0     = 0x73686131  #intbv(1936220465)[32:] # 32'h73686131; ## "sha1"
-    CORE_NAME1     = 0x20202020  #intbv(538976288)[32:]  # 32'h20202020; ## "    "
-    CORE_VERSION   = 0x302e3630  #intbv(808334896)[32:]  # 32'h302e3630; ## "0.60"
-
     # Constructor
     def __init__( s ):
 
-	ADDR_NAME0       = 0x00  #intbv(0)[8:] # 8'h00;
-   	ADDR_NAME1       = 0x01  #intbv(1)[8:] # 8'h01;
-   	ADDR_VERSION     = 0x02  #intbv(2)[8:] # 8'h02;
+        ADDR_NAME0       = 0x00  #intbv(0)[8:] # 8'h00;
+        ADDR_NAME1       = 0x01  #intbv(1)[8:] # 8'h01;
+        ADDR_VERSION     = 0x02  #intbv(2)[8:] # 8'h02;
 
-   	ADDR_CTRL        = 0x08  #intbv(8)[8:] # 8'h08;
-   	CTRL_INIT_BIT    = 0
-    	CTRL_NEXT_BIT    = 1
+        ADDR_CTRL        = 0x08  #intbv(8)[8:] # 8'h08;
+        CTRL_INIT_BIT    = 0
+        CTRL_NEXT_BIT    = 1
 
-   	ADDR_STATUS      = 0x09  #intbv(9)[8:] # 8'h09;
-   	STATUS_READY_BIT = 0
-    	STATUS_VALID_BIT = 1
+        ADDR_STATUS      = 0x09  #intbv(9)[8:] # 8'h09;
+        STATUS_READY_BIT = 0
+        STATUS_VALID_BIT = 1
 
-   	ADDR_BLOCK0    = 0x10    #intbv(16)[8:] # 8'h10;
-    	ADDR_BLOCK15   = 0x1f    #intbv(31)[8:] # 8'h1f;
+        ADDR_BLOCK0    = 0x10    #intbv(16)[8:] # 8'h10;
+        ADDR_BLOCK15   = 0x1f    #intbv(31)[8:] # 8'h1f;
 
-   	ADDR_DIGEST0   = 0x20    #intbv(32)[8:] # 8'h20;
-	ADDR_DIGEST4   = 0x24    #intbv(36)[8:] # 8'h24;
+        ADDR_DIGEST0   = 0x20    #intbv(32)[8:] # 8'h20;
+        ADDR_DIGEST4   = 0x24    #intbv(36)[8:] # 8'h24;
 
-	CORE_NAME0     = 0x73686131  #intbv(1936220465)[32:] # 32'h73686131; ## "sha1"
-	CORE_NAME1     = 0x20202020  #intbv(538976288)[32:]  # 32'h20202020; ## "    "
-	CORE_VERSION   = 0x302e3630  #intbv(808334896)[32:]  # 32'h302e3630; ## "0.60"
+        CORE_NAME0     = 0x73686131  #intbv(1936220465)[32:] # 32'h73686131; ## "sha1"
+        CORE_NAME1     = 0x20202020  #intbv(538976288)[32:]  # 32'h20202020; ## "    "
+        CORE_VERSION   = 0x302e3630  #intbv(808334896)[32:]  # 32'h302e3630; ## "0.60"
 
         # Port-based interface
 

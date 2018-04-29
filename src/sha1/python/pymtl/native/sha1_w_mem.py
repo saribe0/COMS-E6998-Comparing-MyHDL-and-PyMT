@@ -2,14 +2,12 @@ from pymtl import *
 
 class sha1_w_mem( Model ):
 
-    SHA1_ROUNDS = 79
-    CTRL_IDLE   = 0
-    CTRL_UPDATE = 1
-
     # Constructor
     def __init__( s ):
 
-	CTRL_IDLE = 0
+        SHA1_ROUNDS = 79
+        CTRL_IDLE   = 0
+        CTRL_UPDATE = 1
 
         s.reset_n = InPort(Bits(1))
 
