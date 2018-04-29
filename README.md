@@ -88,6 +88,7 @@ Co Simulation requires additional steps found in the github under cosimulation/<
 #### Documentation
 * GitHub: https://github.com/cornell-brg/pymtl
 * Publication: http://ieeexplore.ieee.org/document/7011395/ 
+	* https://www.andrew.cmu.edu/user/sjayasur/hotchipsabstract.pdf
 * Tutorials:
 	* https://github.com/cornell-brg/pymtl-tut-hls
 	* https://github.com/cornell-ece4750/ece4750-tut3-pymtl
