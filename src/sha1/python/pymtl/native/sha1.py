@@ -80,7 +80,7 @@ class sha1( Model ):
 			s.read_data.value = s.tmp_read_data
 			s.error.value = s.tmp_error
 
-		@s.tick_rtl
+		@s.tick
 		def reg_update():
 			if not s.reset_n:
 				s.init_reg.next = 0

@@ -64,38 +64,53 @@ def test_bench():
 	digest_data = Wire(Bits(160))
 
 
-	sha1 = sha1()
-	connect(tb_reset_n, sha1.reset_n)
-	connect(tb_cs, sha1.cs)
-	connect(tb_write_read, sha1.we)
-	connect(tb_address, sha1.address)
-	connect(tb_data_in, sha1.write_data)
-	connect(tb_data_out, sha1.read_data)
-	connect(tb_error, sha1.error)
+	model = sha1()
+	model.elaborate()
+	model.reset_n = tb_reset_n
+	model.cs = tb_cs
+	model.we = tb_write_read
+	model.address = tb_address
+	model.write_data = tb_data_in
+	model.read_data = tb_data_out
+	model.error = tb_error
+
+	'''
+	connect(tb_reset_n, model.reset_n)
+	connect(tb_cs, model.cs)
+	connect(tb_write_read, model.we)
+	connect(tb_address, model.address)
+	connect(tb_data_in, model.write_data)
+	connect(tb_data_out, model.read_data)
+	connect(tb_error, model.error)
+	'''
+
+	#	model.elaborate()
+	sim = SimulationTool(model)
+	sim.reset()
 
 	def delay(cycles = 1):
 		for _ in range(cycles):
 			sim.cycle()
-			cycle_ctr.value = cycle_ctr + 1
+			cycle_ctr = cycle_ctr + 1
 
 
 	def reset_dut():
-		tb_reset_n.next = 0
+		tb_reset_n = 0
 
 		delay(4)
 
-		tb_reset_n.next = 1
+		tb_reset_n = 1
 
 	def init_sim():
-		cycle_ctr.value = 0
-		error_ctr.value = 0
-		tc_ctr.value = 0
+		cycle_ctr = 0
+		error_ctr = 0
+		tc_ctr = 0
 
-		tb_reset_n.value = 0
-		tb_cs.value = 0
-		tb_write_read.value = 0
-		tb_address.value = 0
-		tb_data_in.value = 0
+		tb_reset_n = 0
+		tb_cs = 0
+		tb_write_read = 0
+		tb_address = 0
+		tb_data_in = 0
 
 	def display_test_result():
 		if (error_ctr == 0):
