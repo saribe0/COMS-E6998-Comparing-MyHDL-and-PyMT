@@ -104,6 +104,7 @@ class testbench( Model ):
 
 
 def test_bench():
+	model = 
 	sim = SimulationTool( model )
 	sim.reset
 

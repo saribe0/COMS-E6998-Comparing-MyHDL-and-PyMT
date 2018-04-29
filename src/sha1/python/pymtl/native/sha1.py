@@ -81,7 +81,7 @@ class sha1( Model ):
 
 		@s.tick_rtl
 		def reg_update():
-			if !s.reset_n:
+			if not s.reset_n:
 				s.init_reg.next = 0
 				s.next_reg.next = 0
 				s.ready_reg.next = 0

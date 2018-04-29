@@ -92,7 +92,7 @@ class sha1_core( Model ):
 
 		@s.tick_rtl
 		def reg_update():
-			if !s.reset_n:
+			if not s.reset_n:
 				s.a_reg.next            = 0
 				s.b_reg.next            = 0
 				s.c_reg.next            = 0
@@ -201,7 +201,7 @@ class sha1_core( Model ):
 					k = 0x6ed9eba1
 					f = s.b_reg ^ s.c_reg ^ s.d_reg
 
-				elif ((s.round_ctr_reg >= 40) && (s.round_ctr_reg <= 59)):
+				elif ((s.round_ctr_reg >= 40) and (s.round_ctr_reg <= 59)):
 					k = 0x8f1bbcdc
 			  		f = ((s.b_reg | s.c_reg) ^ (s.b_reg | s.d_reg) ^ (s.c_reg | s.d_reg))
 
