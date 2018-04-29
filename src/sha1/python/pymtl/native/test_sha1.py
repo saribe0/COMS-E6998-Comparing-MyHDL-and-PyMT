@@ -47,32 +47,32 @@ ADDR_DIGEST4   = 36 # 8'h24
 
 def test_bench():
 
-    tb_reset_n = Wire(Bits(1))
+    test_bench.tb_reset_n = Bits(1)
 
-    cycle_ctr = Wire(Bits(32)) 
-    error_ctr = Wire(Bits(32))
-    tc_ctr    = Wire(Bits(32))
+    test_bench.cycle_ctr = Bits(32, 0) 
+    test_bench.error_ctr = Bits(32)
+    test_bench.tc_ctr    = Bits(32)
 
-    tb_cs = Wire(Bits(1))
-    tb_write_read = Wire(Bits(1))
-    tb_address = Wire(Bits(8))
-    tb_data_in = Wire(Bits(32))
-    tb_data_out = Wire(Bits(32))
-    tb_error = Wire(Bits(1))
+    test_bench.tb_cs = Bits(1)
+    test_bench.tb_write_read = Bits(1)
+    test_bench.tb_address = Bits(8)
+    test_bench.tb_data_in = Bits(32)
+    test_bench.tb_data_out = Bits(32)
+    test_bench.tb_error = Bits(1)
 
-    read_data = Wire(Bits(32))
-    digest_data = Wire(Bits(160))
+    test_bench.read_data = Bits(32)
+    test_bench.digest_data = Bits(160)
 
 
-    model = sha1()
-    model.elaborate()
-    model.reset_n = tb_reset_n
-    model.cs = tb_cs
-    model.we = tb_write_read
-    model.address = tb_address
-    model.write_data = tb_data_in
-    model.read_data = tb_data_out
-    model.error = tb_error
+    test_bench.model = sha1()
+    test_bench.model.elaborate()
+    test_bench.model.reset_n = test_bench.tb_reset_n
+    test_bench.model.cs = test_bench.tb_cs
+    test_bench.model.we = test_bench.tb_write_read
+    test_bench.model.address = test_bench.tb_address
+    test_bench.model.write_data = test_bench.tb_data_in
+    test_bench.model.read_data = test_bench.tb_data_out
+    test_bench.model.error = test_bench.tb_error
 
     '''
     connect(tb_reset_n, model.reset_n)
@@ -85,32 +85,32 @@ def test_bench():
     '''
 
     #   model.elaborate()
-    sim = SimulationTool(model)
-    sim.reset()
+    test_bench.sim = SimulationTool(test_bench.model)
+    test_bench.sim.reset()
 
     def delay(cycles = 1):
         for _ in range(cycles):
-            sim.cycle()
-            cycle_ctr = cycle_ctr + 1
+            test_bench.sim.cycle()
+            test_bench.cycle_ctr.value +=  1
 
 
     def reset_dut():
-        tb_reset_n = 0
+        test_bench.model.reset_n.value = 0
 
         delay(4)
 
-        tb_reset_n = 1
+        test_bench.model.reset_n.value = 1
 
     def init_sim():
-        cycle_ctr = 0
-        error_ctr = 0
-        tc_ctr = 0
+        test_bench.cycle_ctr.value = 0
+        test_bench.error_ctr.value = 0
+        test_bench.tc_ctr.value = 0
 
-        tb_reset_n = 0
-        tb_cs = 0
-        tb_write_read = 0
-        tb_address = 0
-        tb_data_in = 0
+        test_bench.model.reset_n.value = 0
+        test_bench.model.cs.value = 0
+        test_bench.model.we.value = 0
+        test_bench.model.address.value = 0
+        test_bench.model.write_data.value = 0
 
     def display_test_result():
         if (error_ctr == 0):
@@ -122,32 +122,32 @@ def test_bench():
             pass
 
     def wait_ready():
-        read_data.value = 0
+        test_bench.read_data.value = 0
 
-        while read_data == 0:
+        while test_bench.read_data == 0:
             read_word(ADDR_STATUS)
 
     def read_word(address):
-        tb_address.value = address
-        tb_cs.value = 1
-        tb_write_read.value = 0
+        test_bench.model.address.value = address
+        test_bench.model.cs.value = 1
+        test_bench.model.we.value = 0
 
         delay()
 
-        read_data.value = tb_data_out
-        tb_cs.value = 0
+        test_bench.read_data.value = test_bench.model.read_data
+        test_bench.model.cs.value = 0
 
 
     def write_word(address, word):
-        tb_address.value = address
-        tb_data_in.value = word
-        tb_cs.value = 1
-        tb_write_read.value = 1
+        test_bench.model.address.value = address
+        test_bench.model.write_data.value = word
+        test_bench.model.cs.value = 1
+        test_bench.model.we.value = 1
 
         delay()
 
-        tb_cs.value = 0
-        tb_write_read.value = 0
+        test_bench.model.cs.value = 0
+        test_bench.model.value = 0
 
     def write_block(block):
         write_word(ADDR_BLOCK0,  block[480 : 512])
@@ -168,18 +168,18 @@ def test_bench():
         write_word(ADDR_BLOCK15, block[0   :  32])
 
     def check_name_version():
-        name0 = Wire(Bits(32))
-        name1 = Wire(Bits(32))
-        version = Wire(Bits(32))
+        name0 = Bits(32)
+        name1 = Bits(32)
+        version = Bits(32)
 
         read_word(ADDR_NAME0)
-        name0.value = read_data
+        name0.value = test_bench.read_data
 
         read_word(ADDR_NAME1)
-        name1.value = read_data
+        name1.value = test_bench.read_data
 
         read_word(ADDR_VERSION)
-        version.value = read_data
+        version.value = test_bench.read_data
 
         print "DUT name: %c%c%c%c%c%c%c%c" % (name0[24 : 32], name0[16 : 24], name0[8 : 16], name0[0 : 8], name1[24 : 32], name1[16 : 24], name1[8 : 16], name1[0 : 8])
         print "DUT version: %c%c%c%c" % (version[24 : 32], version[16 : 24], version[8 : 16], version[0 : 8])
@@ -187,15 +187,15 @@ def test_bench():
     def read_digest():
 
         read_word(ADDR_DIGEST0)
-        digest_data.value[128 : 160] = read_data;
+        test_bench.digest_data.value[128 : 160] = test_bench.read_data;
         read_word(ADDR_DIGEST1)
-        digest_data.value[96  : 128] = read_data;
+        test_bench.digest_data.value[96  : 128] = test_bench.read_data;
         read_word(ADDR_DIGEST2)
-        digest_data.value[64  :  96] = read_data;
+        test_bench.digest_data.value[64  :  96] = test_bench.read_data;
         read_word(ADDR_DIGEST3)
-        digest_data.value[32  :  64] = read_data;
+        test_bench.digest_data.value[32  :  64] = test_bench.read_data;
         read_word(ADDR_DIGEST4)
-        digest_data.value[0   :  32] = read_data;
+        test_bench.digest_data.value[0   :  32] = test_bench.read_data;
 
     def single_block_test(block, expected):
 
@@ -208,20 +208,20 @@ def test_bench():
         read_digest()
 
         if (digest_data == expected):
-            print "TC%d: OK." % tc_ctr
+            print "TC%d: OK." % test_bench.tc_ctr
             pass
         else:
-            print "TC%d: ERROR." % tc_ctr
-            print "TC%d: Expected: 0x%x" % (tc_ctr, expected)
-            print "TC%d: Got:      0x%x" % (tc_ctr, digest_data)
-            error_ctr.value = error_ctr + 1;
+            print "TC%d: ERROR." % test_bench.tc_ctr
+            print "TC%d: Expected: 0x%x" % (test_bench.tc_ctr, expected)
+            print "TC%d: Got:      0x%x" % (test_bench.tc_ctr, digest_data)
+            test_bench.error_ctr.value = test_bench.error_ctr + 1;
         
-        print "*** TC%d - Single block test done." % tc_ctr
-        tc_ctr.value = tc_ctr + 1;
+        print "*** TC%d - Single block test done." % test_bench.tc_ctr
+        test_bench.tc_ctr.value = test_bench.tc_ctr + 1;
 
     def double_block_test(block0, expected0, block1, expected1):
 
-        print "*** TC%d - Double block test started." % tc_ctr
+        print "*** TC%d - Double block test started." % test_bench.tc_ctr
 
         ## First block
         write_block(block0)
@@ -233,13 +233,13 @@ def test_bench():
         read_digest()
 
         if (digest_data == expected0):
-            print "TC%d first block: OK." % tc_ctr
+            print "TC%d first block: OK." % test_bench.tc_ctr
             pass
         else:
-            print "TC%d: ERROR in first digest" % tc_ctr
-            print "TC%d: Expected: 0x%x", (tc_ctr, expected0)
-            print "TC%d: Got:      0x%x", (tc_ctr, digest_data)
-            error_ctr.value = error_ctr + 1;
+            print "TC%d: ERROR in first digest" % test_bench.tc_ctr
+            print "TC%d: Expected: 0x%x", (test_bench.tc_ctr, expected0)
+            print "TC%d: Got:      0x%x", (test_bench.tc_ctr, digest_data)
+            test_bench.error_ctr.value = test_bench.error_ctr + 1;
 
         ## Final block
         write_block(block1)
@@ -251,16 +251,16 @@ def test_bench():
         read_digest()
 
         if (digest_data == expected1):
-            print "TC%d final block: OK." % tc_ctr
+            print "TC%d final block: OK." % test_bench.tc_ctr
             pass
         else:
-            print "TC%d: ERROR in final digest"% tc_ctr
-            print "TC%d: Expected: 0x%040x" % (tc_ctr, expected1)
-            print "TC%d: Got:      0x%040x" % (tc_ctr, digest_data)
-            error_ctr.value = error_ctr + 1;
+            print "TC%d: ERROR in final digest"% test_bench.tc_ctr
+            print "TC%d: Expected: 0x%040x" % (test_bench.tc_ctr, expected1)
+            print "TC%d: Got:      0x%040x" % (test_bench.tc_ctr, digest_data)
+            test_bench.error_ctr.value = test_bench.error_ctr + 1;
 
-        print "*** TC%d - Double block test done." % tc_ctr
-        tc_ctr.value = tc_ctr + 1;
+        print "*** TC%d - Double block test done." % test_bench.tc_ctr
+        test_bench.tc_ctr.value += 1;
 
 
     # Run the test

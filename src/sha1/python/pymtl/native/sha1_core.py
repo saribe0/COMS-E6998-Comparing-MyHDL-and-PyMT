@@ -18,6 +18,8 @@ class sha1_core( Model ):
     # Constructor
     def __init__( s ):
 
+	CTRL_IDLE = 0
+
         s.reset_n = InPort (Bits(1))
 
         s.init    = InPort (Bits(1))

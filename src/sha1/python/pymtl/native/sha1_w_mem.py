@@ -9,6 +9,8 @@ class sha1_w_mem( Model ):
     # Constructor
     def __init__( s ):
 
+	CTRL_IDLE = 0
+
         s.reset_n = InPort(Bits(1))
 
         s.block = InPort (Bits(512))
@@ -60,7 +62,7 @@ class sha1_w_mem( Model ):
 
             if not s.reset_n:
                 for ii in range(16):
-                    s.w_mem[ii].value = 0
+                    s.w_mem[ii].next = 0
 
             else:
                 if s.w_mem_we:
