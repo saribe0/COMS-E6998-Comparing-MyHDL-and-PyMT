@@ -2,7 +2,7 @@ from pymtl import *
 from sha1 import sha1
 
 DEBUG_CORE = 0
-DEBUG_TOP  = 1
+DEBUG_TOP  = 0
 
 CLK_HALF_PERIOD = 5
 CLK_PERIOD = CLK_HALF_PERIOD * 2
@@ -74,16 +74,6 @@ def test_bench():
     test_bench.model.read_data = test_bench.tb_data_out
     test_bench.model.error = test_bench.tb_error
 
-    '''
-    connect(tb_reset_n, model.reset_n)
-    connect(tb_cs, model.cs)
-    connect(tb_write_read, model.we)
-    connect(tb_address, model.address)
-    connect(tb_data_in, model.write_data)
-    connect(tb_data_out, model.read_data)
-    connect(tb_error, model.error)
-    '''
-
     #   model.elaborate()
     test_bench.sim = SimulationTool(test_bench.model)
     test_bench.sim.reset()
@@ -93,12 +83,10 @@ def test_bench():
             test_bench.sim.cycle()
             test_bench.cycle_ctr.value +=  1
 
-
     def reset_dut():
-	print "*** Toggle reset."
         test_bench.model.reset_n.value = 0
 
-        delay(4)
+        delay(2)
 
         test_bench.model.reset_n.value = 1
 
@@ -208,6 +196,8 @@ def test_bench():
 
     def single_block_test(block, expected):
 
+	print "*** TC0 - Single block test started."
+
         write_block(block)
         write_word(ADDR_CTRL, CTRL_INIT_VALUE)
 
@@ -307,7 +297,6 @@ def test_bench():
     double_block_test(tc2_1, res2_1, tc2_2, res2_2)
     
     # Display results and finish up
-    delay()
     display_test_result()
     print "*** Simulation done. ***"
 

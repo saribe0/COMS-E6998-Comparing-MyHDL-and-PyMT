@@ -81,12 +81,11 @@ class sha1_w_mem( Model ):
                     s.w_mem[14].next = s.w_mem14_new
                     s.w_mem[15].next = s.w_mem15_new
 
-                if s.w_ctr_we:
+	        if s.w_ctr_we:
                     s.w_ctr_reg.next = s.w_ctr_new
 
                 if s.sha1_w_mem_ctrl_we:
                     s.sha1_w_mem_ctrl_reg.next = s.sha1_w_mem_ctrl_new
-
 
         @s.combinational
         def select_w():
@@ -122,6 +121,7 @@ class sha1_w_mem( Model ):
             s.w_mem13_new.value = 0
             s.w_mem14_new.value = 0
             s.w_mem15_new.value = 0
+	    s.w_mem_we.value = 0
 
             w_0  = s.w_mem[0].value
             w_2  = s.w_mem[2].value
@@ -149,6 +149,7 @@ class sha1_w_mem( Model ):
                 s.w_mem13_new.value = s.block[64  :  96]
                 s.w_mem14_new.value = s.block[32  :  64]
                 s.w_mem15_new.value = s.block[0   :  32]
+		s.w_mem_we.value = 1
 
             elif s.w_ctr_reg > 15:
 
@@ -168,8 +169,7 @@ class sha1_w_mem( Model ):
                 s.w_mem13_new.value = s.w_mem[14]
                 s.w_mem14_new.value = s.w_mem[15]
                 s.w_mem15_new.value = s.w_new
-
-                s.w_mem_we.value = 1
+	        s.w_mem_we.value = 1
 
         @s.combinational
         def w_ctr():
@@ -181,7 +181,7 @@ class sha1_w_mem( Model ):
                 s.w_ctr_we.value = 1
 
             if s.w_ctr_inc:
-                s.w_ctr_new.value = s.w_ctr_reg + 1
+                s.w_ctr_new.value = s.w_ctr_reg.value + 1
                 s.w_ctr_we.value = 1
 
 
@@ -196,7 +196,7 @@ class sha1_w_mem( Model ):
 
                 if s.init:
                     s.w_ctr_rst.value = 1
-                    s.sha1_w_mem_ctrl_new.vlaue = CTRL_UPDATE
+                    s.sha1_w_mem_ctrl_new.value = CTRL_UPDATE
                     s.sha1_w_mem_ctrl_we.value = 1
 
             elif s.sha1_w_mem_ctrl_reg == CTRL_UPDATE:
@@ -207,11 +207,6 @@ class sha1_w_mem( Model ):
                 if s.w_ctr_reg == SHA1_ROUNDS:
                     s.sha1_w_mem_ctrl_new.value = CTRL_IDLE
                     s.sha1_w_mem_ctrl_we.value = 1
-
-
-
-
-
 
 
 

@@ -161,7 +161,7 @@ def sha1_w_mem(clk, reset_n, block, init, next, w):
 			w_16[:]  = w_13 ^ w_8 ^ w_2 ^ w_0
 			w_new.next[32:1] = w_16[31: 0]
 			w_new.next[1 :0] = w_16[32:31]
-			
+		
 			if (init):
 					w_mem00_new.next[:] = block[512 : 480]
 					w_mem01_new.next[:] = block[480 : 448]
