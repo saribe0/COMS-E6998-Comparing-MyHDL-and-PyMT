@@ -32,7 +32,7 @@ class sha1( Model ):
 
 		# Clock and reset inherently included
 		# s.clk 	  = InPort (Bits(1))
-		# s.reset_n = InPort (Bits(1))
+		s.reset_n = InPort (Bits(1))
 		s.cs 	  = InPort (Bits(1))
 		s.we 	  = InPort (Bits(1))
 
@@ -61,6 +61,7 @@ class sha1( Model ):
 
 		# Intantiate the core
 		s.core = sha1_core()
+		s.connect(s.reset_n, s.core.reset_n)
 		s.connect(s.init_reg, s.core.init)
 		s.connect(s.next_reg, s.core.next)
 		s.connect(s.core_block, s.core.block)

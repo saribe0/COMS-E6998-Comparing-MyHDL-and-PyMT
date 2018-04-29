@@ -18,6 +18,8 @@ class sha1_core( Model ):
 	# Constructor
 	def __init__( s ):
 
+		s.reset_n = InPort (Bits(1))
+
 		s.init 	  = InPort (Bits(1))
 		s.next 	  = InPort (Bits(1))
 
@@ -77,6 +79,7 @@ class sha1_core( Model ):
 
 		# Intantiate the memories
 		s.w_mem_inst = sha1_w_mem()
+		s.connect(s.reset_n, s.w_mem_inst.reset_n)
 		s.connect(s.block, s.w_mem_inst.block)
 		s.connect(s.w_init, s.w_mem_inst.init)
 		s.connect(s.w_next, s.w_mem_inst.next)

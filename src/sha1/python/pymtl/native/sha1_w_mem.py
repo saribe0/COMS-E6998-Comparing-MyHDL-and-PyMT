@@ -9,6 +9,8 @@ class sha1_w_mem( Model ):
 	# Constructor
 	def __init__( s ):
 
+		s.reset_n = InPort(Bits(1))
+
 		s.block = InPort (Bits(512))
 		s.init  = InPort (Bits(1))
 		s.next  = InPort (Bits(1))
