@@ -118,7 +118,7 @@ class sha1_core( Model ):
                     s.d_reg.next = s.d_new
                     s.e_reg.next = s.e_new
 
-                if H_we:
+                if s.H_we:
                     s.H0_reg.next = s.H0_new
                     s.H1_reg.next = s.H1_new
                     s.H2_reg.next = s.H2_new
@@ -212,12 +212,12 @@ class sha1_core( Model ):
                     k = 0xca62c1d6
                     f = s.b_reg ^ s.c_reg ^ s.d_reg
 
-                a5 = concat(s.a_reg[27 : 0], s.a_reg[32 : 27])
+                a5 = concat(s.a_reg[0 : 27], s.a_reg[27 : 32])
                 t = a5 + s.e_reg + f + k + s.w
 
                 s.a_new.value  = t
                 s.b_new.value  = s.a_reg
-                s.c_new.value  = concat(s.b_reg[2 : 0], s.b_reg[32 : 2])
+                s.c_new.value  = concat(s.b_reg[0 : 2], s.b_reg[2 : 32])
                 s.d_new.value  = s.c_reg
                 s.e_new.value  = s.d_reg
                 s.a_e_we.value = 1

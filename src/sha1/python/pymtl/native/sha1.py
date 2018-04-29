@@ -96,7 +96,7 @@ class sha1( Model ):
                 s.next_reg.next = s.next_new
 
                 if s.block_we:
-                    s.block_reg[address[4:0]].next = s.write_data
+                    s.block_reg[s.address[0:4]].next = s.write_data
 
                 if s.core_digest_valid:
                     s.digest_reg.next = s.core_digest
@@ -117,17 +117,17 @@ class sha1( Model ):
                         s.block_we.value = 1
 
                     if s.address == ADDR_CTRL:
-                        s.init_new.value = write_data[CTRL_INIT_BIT]
-                        s.next_new.value = write_data[CTRL_NEXT_BIT]
+                        s.init_new.value = s.write_data[CTRL_INIT_BIT]
+                        s.next_new.value = s.write_data[CTRL_NEXT_BIT]
 
                 else:
 
                     if s.address >= ADDR_BLOCK0 and s.address <= ADDR_BLOCK15:
-                        s.tmp_read_data.value = block_reg[address[4:0]]
+                        s.tmp_read_data.value = s.block_reg[s.address[0:4]]
 
                     if s.address >= ADDR_DIGEST0 and s.address <= ADDR_DIGEST4:
                         offset = (4 - (s.address - ADDR_DIGEST0)) * 32
-                        s.tmp_read_data.value = s.digest_reg[offset + 32 : offset]
+                        s.tmp_read_data.value = s.digest_reg[offset : offset + 32]
 
                     if s.address == ADDR_NAME0:
                         s.tmp_read_data.value = CORE_NAME0
@@ -139,10 +139,10 @@ class sha1( Model ):
                         s.tmp_read_data.value = CORE_VERSION
 
                     elif s.address == ADDR_CTRL:
-                        s.tmp_read_data.value = concat(Bit(30, 0), s.next_reg, s.init_reg)
+                        s.tmp_read_data.value = concat(Bits(30, 0), s.next_reg, s.init_reg)
 
                     elif s.address == ADDR_STATUS:
-                        s.tmp_read_data.value = concat(Bit(30, 0), s.digest_valid_reg, s.ready_reg)
+                        s.tmp_read_data.value = concat(Bits(30, 0), s.digest_valid_reg, s.ready_reg)
 
                     else:
                         s.tmp_error.value = 1

@@ -2,7 +2,7 @@ from pymtl import *
 from sha1 import sha1
 
 DEBUG_CORE = 0
-DEBUG_TOP  = 0
+DEBUG_TOP  = 1
 
 CLK_HALF_PERIOD = 5
 CLK_PERIOD = CLK_HALF_PERIOD * 2
@@ -95,6 +95,7 @@ def test_bench():
 
 
     def reset_dut():
+	print "*** Toggle reset."
         test_bench.model.reset_n.value = 0
 
         delay(4)
@@ -113,12 +114,12 @@ def test_bench():
         test_bench.model.write_data.value = 0
 
     def display_test_result():
-        if (error_ctr == 0):
-            print "*** All %d test cases completed successfully." % int(tc_ctr)
+        if (test_bench.error_ctr == 0):
+            print "*** All %d test cases completed successfully." % int(test_bench.tc_ctr)
             pass
         else:
-            print "*** %d test cases completed." % int(tc_ctr)
-            print "*** %d errors detected during testing." % int(error_ctr)
+            print "*** %d test cases completed." % int(test_bench.tc_ctr)
+            print "*** %d errors detected during testing." % int(test_bench.error_ctr)
             pass
 
     def wait_ready():
@@ -137,8 +138,16 @@ def test_bench():
         test_bench.read_data.value = test_bench.model.read_data
         test_bench.model.cs.value = 0
 
+	if DEBUG_TOP:
+		print "*** Reading 0x%x from 0x%x." % (test_bench.read_data, address)
+		print ""
 
     def write_word(address, word):
+	
+	if DEBUG_TOP:
+                print "*** Writing 0x%x from 0x%x." % (word, address)
+                print ""
+
         test_bench.model.address.value = address
         test_bench.model.write_data.value = word
         test_bench.model.cs.value = 1
@@ -207,13 +216,13 @@ def test_bench():
         wait_ready()
         read_digest()
 
-        if (digest_data == expected):
+        if (test_bench.digest_data == expected):
             print "TC%d: OK." % test_bench.tc_ctr
             pass
         else:
             print "TC%d: ERROR." % test_bench.tc_ctr
             print "TC%d: Expected: 0x%x" % (test_bench.tc_ctr, expected)
-            print "TC%d: Got:      0x%x" % (test_bench.tc_ctr, digest_data)
+            print "TC%d: Got:      0x%x" % (test_bench.tc_ctr, test_bench.digest_data)
             test_bench.error_ctr.value = test_bench.error_ctr + 1;
         
         print "*** TC%d - Single block test done." % test_bench.tc_ctr
@@ -232,13 +241,13 @@ def test_bench():
         wait_ready()
         read_digest()
 
-        if (digest_data == expected0):
+        if (test_bench.digest_data == expected0):
             print "TC%d first block: OK." % test_bench.tc_ctr
             pass
         else:
             print "TC%d: ERROR in first digest" % test_bench.tc_ctr
-            print "TC%d: Expected: 0x%x", (test_bench.tc_ctr, expected0)
-            print "TC%d: Got:      0x%x", (test_bench.tc_ctr, digest_data)
+            print "TC%d: Expected: 0x%x" % (test_bench.tc_ctr, expected0)
+            print "TC%d: Got:      0x%x" % (test_bench.tc_ctr, test_bench.digest_data)
             test_bench.error_ctr.value = test_bench.error_ctr + 1;
 
         ## Final block
@@ -250,13 +259,13 @@ def test_bench():
         wait_ready()
         read_digest()
 
-        if (digest_data == expected1):
+        if (test_bench.digest_data == expected1):
             print "TC%d final block: OK." % test_bench.tc_ctr
             pass
         else:
             print "TC%d: ERROR in final digest"% test_bench.tc_ctr
-            print "TC%d: Expected: 0x%040x" % (test_bench.tc_ctr, expected1)
-            print "TC%d: Got:      0x%040x" % (test_bench.tc_ctr, digest_data)
+            print "TC%d: Expected: 0x%x" % (test_bench.tc_ctr, expected1)
+            print "TC%d: Got:      0x%x" % (test_bench.tc_ctr, test_bench.digest_data)
             test_bench.error_ctr.value = test_bench.error_ctr + 1;
 
         print "*** TC%d - Double block test done." % test_bench.tc_ctr
@@ -302,7 +311,7 @@ def test_bench():
     display_test_result()
     print "*** Simulation done. ***"
 
-    print "\nSimulation took %d clock cycles." % cycle_ctr
+    print "\nSimulation took %d clock cycles." % test_bench.cycle_ctr
     
 
 
