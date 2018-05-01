@@ -63,7 +63,7 @@ class sha1( Model ):
         s.core = sha1_core()
         s.connect(s.reset_n, s.core.reset_n)
         s.connect(s.init_reg, s.core.init)
-        s.connect(s.next_reg, s.core.next)
+        s.connect(s.next_reg, s.core.next_in)
         s.connect(s.core_block, s.core.block)
         s.connect(s.core_ready, s.core.ready)
         s.connect(s.core_digest, s.core.digest)
@@ -80,7 +80,7 @@ class sha1( Model ):
             s.read_data.value = s.tmp_read_data
             s.error.value = s.tmp_error
 
-        @s.tick
+        @s.tick_rtl
         def reg_update():
             if not s.reset_n:
                 s.init_reg.next = 0
@@ -88,6 +88,9 @@ class sha1( Model ):
                 s.ready_reg.next = 0
                 s.digest_reg.next = 0
                 s.digest_valid_reg.next = 0
+		
+                for ii in range(16):
+                    s.block_reg[ii].next = 0
 
             else:
                 s.ready_reg.next = s.core_ready
@@ -108,6 +111,7 @@ class sha1( Model ):
             s.block_we.value = 0
             s.tmp_read_data.value = 0
             s.tmp_error.value = 0
+	    offset = Bits(16)
 
             if s.cs:
 

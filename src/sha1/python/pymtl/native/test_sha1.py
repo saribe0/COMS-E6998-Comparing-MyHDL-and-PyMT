@@ -74,9 +74,13 @@ def test_bench():
     test_bench.model.read_data = test_bench.tb_data_out
     test_bench.model.error = test_bench.tb_error
 
-    #   model.elaborate()
+    # These lines are required for simulation
     test_bench.sim = SimulationTool(test_bench.model)
     test_bench.sim.reset()
+
+    # This line is used to translate the model to Verilog
+    vModel = sha1()
+    translated = TranslationTool(vModel)
 
     def delay(cycles = 1):
         for _ in range(cycles):

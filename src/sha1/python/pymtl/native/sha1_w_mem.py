@@ -13,7 +13,7 @@ class sha1_w_mem( Model ):
 
         s.block = InPort (Bits(512))
         s.init  = InPort (Bits(1))
-        s.next  = InPort (Bits(1))
+        s.next_in  = InPort (Bits(1))
         s.w     = OutPort(Bits(32))
 
         s.w_mem = [Wire(Bits(32)) for _ in range(16)]
@@ -55,13 +55,13 @@ class sha1_w_mem( Model ):
             s.w.value = s.w_tmp
 
 
-        @s.tick
+        @s.tick_rtl
         def reg_update():
 
             if not s.reset_n:
                 for ii in range(16):
                     s.w_mem[ii].next = 0
-
+		s.sha1_w_mem_ctrl_reg.next = CTRL_IDLE
             else:
                 if s.w_mem_we:
                     s.w_mem[0].next  = s.w_mem00_new
@@ -201,7 +201,7 @@ class sha1_w_mem( Model ):
 
             elif s.sha1_w_mem_ctrl_reg == CTRL_UPDATE:
 
-                if s.next:
+                if s.next_in:
                     s.w_ctr_inc.value = 1
 
                 if s.w_ctr_reg == SHA1_ROUNDS:

@@ -26,8 +26,8 @@ if {[info exists env(SOURCE_FILES)]} {
 }
 
 # Enter the build path
-file mkdir ${BUILD_PATH}
-cd ${BUILD_PATH}
+file mkdir $env(BUILD_PATH)
+cd $env(BUILD_PATH)
 
 # Create the project
 project_new -family ${FAMILY} ${TOP} -overwrite

@@ -21,7 +21,7 @@ class sha1_core( Model ):
         s.reset_n = InPort (Bits(1))
 
         s.init    = InPort (Bits(1))
-        s.next    = InPort (Bits(1))
+        s.next_in    = InPort (Bits(1))
 
         s.block      = InPort (Bits(512))
         s.ready      = OutPort(Bits(1))
@@ -82,7 +82,7 @@ class sha1_core( Model ):
         s.connect(s.reset_n, s.w_mem_inst.reset_n)
         s.connect(s.block, s.w_mem_inst.block)
         s.connect(s.w_init, s.w_mem_inst.init)
-        s.connect(s.w_next, s.w_mem_inst.next)
+        s.connect(s.w_next, s.w_mem_inst.next_in)
         s.connect(s.w, s.w_mem_inst.w)
 
 
@@ -93,7 +93,7 @@ class sha1_core( Model ):
             s.digest_valid.value = s.digest_valid_reg
 
 
-        @s.tick
+        @s.tick_rtl
         def reg_update():
             if not s.reset_n:
                 s.a_reg.next            = 0
@@ -254,7 +254,7 @@ class sha1_core( Model ):
             s.sha1_ctrl_new.value    = CTRL_IDLE
             s.sha1_ctrl_we.value     = 0
 
-            if s.sha1_ctrl_reg == CTRL_IDLE:
+            if (s.sha1_ctrl_reg == CTRL_IDLE):
 
                 s.ready_flag.value = 1
 
@@ -269,7 +269,7 @@ class sha1_core( Model ):
                     s.sha1_ctrl_new.value    = CTRL_ROUNDS
                     s.sha1_ctrl_we.value     = 1
 
-                if s.next:
+                if s.next_in:
                     s.w_init.value           = 1
                     s.state_init.value       = 1
                     s.round_ctr_rst.value    = 1
@@ -278,16 +278,16 @@ class sha1_core( Model ):
                     s.sha1_ctrl_new.value    = CTRL_ROUNDS
                     s.sha1_ctrl_we.value     = 1
 
-            elif s.sha1_ctrl_reg == CTRL_ROUNDS:
+            elif (s.sha1_ctrl_reg == CTRL_ROUNDS):
                 s.state_update.value = 1
                 s.round_ctr_inc.value = 1
                 s.w_next.value = 1
 
-                if s.round_ctr_reg.value == SHA1_ROUNDS:
+                if (s.round_ctr_reg == SHA1_ROUNDS):
                     s.sha1_ctrl_new.value = CTRL_DONE
                     s.sha1_ctrl_we.value = 1
 
-            elif s.sha1_ctrl_reg == CTRL_DONE:
+            elif (s.sha1_ctrl_reg == CTRL_DONE):
                 s.digest_update.value = 1
                 s.digest_valid_new.value = 1
                 s.digest_valid_we.value = 1

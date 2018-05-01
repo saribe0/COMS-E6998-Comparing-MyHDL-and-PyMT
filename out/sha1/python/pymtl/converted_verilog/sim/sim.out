@@ -1,0 +1,33 @@
+Reading pref.tcl
+
+# 10.5b
+
+# vsim -c -do "set t [clock milliseconds]; run -a; set t2 [clock milliseconds];" tb_sha1 
+# Start time: 16:40:12 on May 01,2018
+# Loading work.tb_sha1
+# Loading work.sha1
+# Loading work.sha1_core_0x187abc469c6b3e24
+# Loading work.sha1_w_mem_0x7b9c5c7418aeb58d
+# ** Warning: (vsim-3017) /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/py_tb_sha1.v(108): [TFMPC] - Too few port connections. Expected 9, found 8.
+#    Time: 0 ns  Iteration: 0  Instance: /tb_sha1/dut File: /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/sha1_0x1ea2ebb7611040fb.v
+# ** Warning: (vsim-3722) /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/py_tb_sha1.v(108): [TFMPC] - Missing connection for port 'reset'.
+# set t [clock milliseconds]
+# 1525192812997
+#  run -a
+#    -- Testbench for sha1 started --
+# *** Toggle reset.
+# DUT name: sha1    
+# DUT version: 0.60
+# *** TC0 - Single block test started.
+# TC0: OK.
+# *** TC0 - Single block test done.
+# *** TC1 - Double block test started.
+# TC1 first block: OK.
+# TC1 final block: OK.
+# *** TC1 - Double block test done.
+# *** All  2 test cases completed successfully.
+# *** Simulation done. ***
+# ** Note: $finish    : /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/py_tb_sha1.v(480)
+#    Time: 3200 ns  Iteration: 0  Instance: /tb_sha1
+# End time: 16:40:13 on May 01,2018, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 2
