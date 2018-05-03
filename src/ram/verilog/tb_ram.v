@@ -174,7 +174,7 @@ module tb_ram();
 			read_a (10'h00);
 			output_data[279 : 272] = byte_out;
 			read_a (10'h01);
-			output_data[272 : 264] = byte_out;
+			output_data[271 : 264] = byte_out;
 			read_b (10'h02);
 			output_data[263 : 256] = byte_out;
 			read_ab(10'h03);
