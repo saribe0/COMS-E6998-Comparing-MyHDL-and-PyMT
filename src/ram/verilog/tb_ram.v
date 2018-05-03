@@ -3,8 +3,8 @@
 `timescale 1ns / 1ns
 module tb_ram();
 
-	parameter DATA_WIDTH = 8;
-	parameter ADDR_WIDTH = 10;
+	localparam DATA_WIDTH = 8;
+	localparam ADDR_WIDTH = 10;
 	parameter CLK_HALF_PERIOD = 5;
 	parameter CLK_PERIOD = CLK_HALF_PERIOD * 2;
 
@@ -28,12 +28,14 @@ module tb_ram();
 	reg [(ADDR_WIDTH-1):0] addr_b;
 
 	// Output wires
-	reg [(DATA_WIDTH-1):0] q_a;
-	reg [(DATA_WIDTH-1):0] q_b;
+	wire [(DATA_WIDTH-1):0] q_a;
+	wire [(DATA_WIDTH-1):0] q_b;
 
 
 	// Device under test
-	ram = dut(
+	ram #(
+			.DATA_WIDTH(DATA_WIDTH), 
+			.ADDR_WIDTH(ADDR_WIDTH)) dut(
 			.clk(clk),
 			.we_a(we_a),
 			.we_b(we_b),
@@ -48,13 +50,13 @@ module tb_ram();
 
 	// Clock generation
 	always
-	begin: clk_gen
+	begin : clk_gen
 		#CLK_HALF_PERIOD clk = !clk;
 	end // clk_gen
 
 	// Cycle counter
 	always
-	begin: cycle_ctr
+	begin: monitor
 		#(CLK_PERIOD);
 		cycle_ctr = cycle_ctr + 1;
 	end // cycle_ctr
@@ -68,10 +70,10 @@ module tb_ram();
 			cycle_ctr = 32'h00000000;
 
 		end
-	endtask : init
+	endtask
 
 
-	task write_ab(address[9 : 0], data[15 : 0]);
+	task write_ab(input [(ADDR_WIDTH-1) : 0] address, input [(DATA_WIDTH*2 -1) : 0]data);
 		begin
 			addr_a = address;
 			addr_b = address + 10'b1;
@@ -85,9 +87,9 @@ module tb_ram();
 			we_a = 0;
 			we_b = 0;
 		end
-	endtask : write_block_ab
+	endtask
 
-	task write_a(address[9 : 0], data[7 : 0]);
+	task write_a(input [(ADDR_WIDTH-1) : 0] address, input [(DATA_WIDTH -1) : 0]data);
 		begin
 			addr_a = address;
 			data_a = data[7 : 0];
@@ -97,9 +99,9 @@ module tb_ram();
 
 			we_a = 0;
 		end
-	endtask : write_block_a
+	endtask
 
-	task write_b(address[9 : 0], data[7 : 0]);
+	task write_b(input [(ADDR_WIDTH-1) : 0] address, input [(DATA_WIDTH -1) : 0]data);
 		begin
 			addr_b = address;
 			data_b = data[7 : 0];
@@ -109,9 +111,9 @@ module tb_ram();
 
 			we_b = 0;
 		end
-	endtask : write_block_b
+	endtask
 
-	task write_block(input[279 : 0] block);
+	task write_block(input[279 : 0] data);
 		begin
 			write_ab(10'h00, data[279 : 264]);
 			write_ab(10'h02, data[263 : 248]);
@@ -133,9 +135,9 @@ module tb_ram();
 			write_a (10'h33, data[15  :   8]);
 			write_b (10'h34, data[7   :   0]);
 		end
-	endtask : write_block
+	endtask
 
-	task read_ab(address[9 : 0]);
+	task read_ab(input [(ADDR_WIDTH-1) : 0] address);
 		begin
 			addr_a = address;
 			addr_b = address + 10'b1;
@@ -145,9 +147,9 @@ module tb_ram();
 			half_word_out[15 : 8] = q_a;
 			half_word_out[7  : 0] = q_b;
 		end
-	endtask : read_ab
+	endtask
 
-	task read_a(address[9 : 0]);
+	task read_a(input [(ADDR_WIDTH-1) : 0] address);
 		begin
 			addr_a = address;
 
@@ -155,9 +157,9 @@ module tb_ram();
 
 			byte_out = q_a;
 		end
-	endtask : read_a
+	endtask
 
-	task read_b(address[9 : 0]);
+	task read_b(input [(ADDR_WIDTH-1) : 0] address);
 		begin
 			addr_b = address;
 
@@ -165,7 +167,7 @@ module tb_ram();
 
 			byte_out = q_b;
 		end
-	endtask : read_b
+	endtask
 
 	task read_block;
 		begin
@@ -208,19 +210,21 @@ module tb_ram();
 			read_ab(10'h33);
 			output_data[15  :   0] = half_word_out;
 		end
-	endtask : read_block
+	endtask
 
 
 	// Simple test to write "This RAM module can read and write." to 
 	// ram and read it back
 	initial
-		begin : ram test
+		begin : ram_test
+			
+			reg [279: 0] in_data;
 
 			$display("*** Starting RAM test ***");
 
-			reg[279: 0] data;
-
-			in_data = 279'h546869732052414d206d6f64756c652063616e207265616420616e642077726974652e;
+			init();
+		
+			in_data = 280'h546869732052414d206d6f64756c652063616e207265616420616e642077726974652e;
 
 			// Write the data to RAM
 			write_block(in_data);
@@ -240,9 +244,10 @@ module tb_ram();
 			end
 
 			$display("*** RAM test finished ***");
+			$finish;
 
-
-			
+		end
+	endmodule	
 
 
 

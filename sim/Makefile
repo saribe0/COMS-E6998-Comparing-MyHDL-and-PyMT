@@ -10,8 +10,8 @@ SOURCE_PATH 	= $(DESIGN_PATH)/src
 SIM_PATH 	= $(DESIGN_PATH)/sim
 SYN_PATH  	= $(DESIGN_PATH)/syn
 SCRIPTS_PATH 	= $(DESIGN_PATH)/scripts
-SIMTOP 		= tb_sha1
-TOP 		= sha1
+SIMTOP 		= tb_ram
+TOP 		= ram
 FAMILY 		= "Cyclone V"
 NUM_PROCESSORS  = 2
 

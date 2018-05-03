@@ -1,0 +1,2 @@
+Warning (10268): Verilog HDL information at ram.v(34): always construct contains both blocking and non-blocking assignments File: /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/ram.v Line: 34
+Warning (10268): Verilog HDL information at ram.v(44): always construct contains both blocking and non-blocking assignments File: /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/ram.v Line: 44
