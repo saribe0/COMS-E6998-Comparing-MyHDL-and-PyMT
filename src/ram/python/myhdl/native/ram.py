@@ -22,4 +22,5 @@ def ram(clk, data_a, data_b, addr_a, addr_b, we_a, we_b, q_a, q_b):
 			q_b.next[:] = data_a
 		else:
 			q_b.next[:] = ram[addr_b]
-			
+
+	return port_a, port_b			

@@ -1,4 +1,5 @@
 from myhdl import *
+from time import time
 from ram import ram
 
 def bench():
@@ -39,8 +40,8 @@ def bench():
 	# Generate verilog during simulation
 	# dut = toVerilog(ram, clk, data_a, data_b, addr_a, addr_b, we_a, we_b, q_a, q_b)
 
-	dut.DATA_WIDTH = DATA_WIDTH
-	dut.ADDR_WIDTH = ADDR_WIDTH
+	#dut.DATA_WIDTH = DATA_WIDTH
+	#dut.ADDR_WIDTH = ADDR_WIDTH
 
 
 	# Clk Generation
@@ -192,7 +193,7 @@ def bench():
 		init()
 
 		in_data = intbv()[280: ]
-		in_data = 0x546869732052414d206d6f64756c652063616e207265616420616e642077726974652e
+		in_data[:] = 0x546869732052414d206d6f64756c652063616e207265616420616e642077726974652e
 
 		# Write the data to ram
 		yield write_block(in_data)
