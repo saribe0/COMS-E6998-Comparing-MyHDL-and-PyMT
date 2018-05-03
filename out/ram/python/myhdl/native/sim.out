@@ -1,0 +1,15 @@
+============================= test session starts ==============================
+platform linux2 -- Python 2.7.12, pytest-3.4.2, py-1.5.2, pluggy-0.6.0
+rootdir: /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/src/ram/python/myhdl/native, inifile:
+plugins: forked-0.2, xdist-1.22.2
+collected 1 item
+
+test_ram.py *** Starting RAM test ***
+Test Successful
+*** RAM test finished ***
+
+Simulation took 38 clock cycles.
+0.0448670387268
+.
+
+=========================== 1 passed in 0.06 seconds ===========================

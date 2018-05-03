@@ -104,14 +104,14 @@ def test_bench():
 
         delay()
 
-        test_bench.half_word_out.value[0 : 8] = test_bench.model.q_a
+        test_bench.byte_out.value[0 : 8] = test_bench.model.q_a
 
     def read_b(address):
         test_bench.model.addr_b.value = address
 
         delay()
 
-        test_bench.half_word_out.value[0 : 8] = test_bench.model.q_b
+        test_bench.byte_out.value[0 : 8] = test_bench.model.q_b
 
 
     # Write and read blocks of 280 bits
@@ -158,7 +158,7 @@ def test_bench():
         read_ab(15)
         test_bench.output_data.value[144 : 160] = test_bench.half_word_out
         read_ab(17)
-        test_bench.output_data.value[128 : 114] = test_bench.half_word_out
+        test_bench.output_data.value[128 : 144] = test_bench.half_word_out
         read_ab(19)
         test_bench.output_data.value[112 : 128] = test_bench.half_word_out
         read_ab(21)
@@ -199,6 +199,7 @@ def test_bench():
         print "Recieved 0x%x" % test_bench.output_data
         print "Expected 0x%x" % in_data
 
+    print "*** RAM test finished ***"
     print "\nSimulation took %d clock cycles." % test_bench.cycle_ctr
 
 

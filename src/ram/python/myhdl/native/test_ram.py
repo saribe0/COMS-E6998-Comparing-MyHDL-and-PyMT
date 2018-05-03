@@ -73,7 +73,7 @@ def bench():
 		data_b.next[:] = data[8 : 0]
 		we_a.next = 1
 		we_b.next = 1
-
+ 
 		yield delay(CLK_PERIOD)
 
 		we_a.next = 0
@@ -101,25 +101,22 @@ def bench():
 	def read_ab(address):
 		addr_a.next[:] = address
 		addr_b.next[:] = address + 1
-
 		yield delay(CLK_PERIOD)
 
-		half_word_out.next[16: 8] = q_a
-		half_word_out.next[8 : 0] = q_b
+		half_word_out.val[16: 8] = q_a
+		half_word_out.val[8 : 0] = q_b
 
 	def read_a(address):
 		addr_a.next[:] = address
-
 		yield delay(CLK_PERIOD)
 
-		byte_out.next[:] = q_a
+		byte_out.val[:] = q_a
 
 	def read_b(address):
 		addr_b.next[:] = address
-
 		yield delay(CLK_PERIOD)
 
-		byte_out.next[:] = q_b
+		byte_out.val[:] = q_b
 
 	# Write a block of 280 bits to RAM
 	def write_block(data):
@@ -200,6 +197,8 @@ def bench():
 
 		# Read the data form the ram
 		yield read_block()
+
+		yield delay(CLK_PERIOD)
 
 		# Compare the results
 		if in_data == output_data:
