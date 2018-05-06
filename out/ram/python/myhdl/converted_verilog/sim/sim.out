@@ -1,0 +1,18 @@
+Reading pref.tcl
+
+# 10.5b
+
+# vsim -c -do "set t [clock milliseconds]; run -a; set t2 [clock milliseconds];" tb_ram 
+# Start time: 16:17:44 on May 06,2018
+# Loading work.tb_ram
+# Loading work.ram
+# set t [clock milliseconds]
+# 1525623464308
+#  run -a
+# *** Starting RAM test ***
+# Test Successful
+# *** RAM test finished ***
+# ** Note: $finish    : /home/ubuntu/Desktop/COMS-E6998-Comparing-MyHDL-and-PyMTL/sim/src/tb_ram.v(245)
+#    Time: 380 ns  Iteration: 0  Instance: /tb_ram
+# End time: 16:17:44 on May 06,2018, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0

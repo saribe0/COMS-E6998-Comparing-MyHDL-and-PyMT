@@ -44,8 +44,8 @@ def test_bench():
     test_bench.sim.reset()
 
     # For verilog translation
-    #vModel = ram()
-    #translated = TranslationTool(vModel)
+    vModel = ram()
+    translated = TranslationTool(vModel)
 
     def delay(cycles = 1):
         for _ in range(cycles):

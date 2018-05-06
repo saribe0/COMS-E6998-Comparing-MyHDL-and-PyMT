@@ -35,10 +35,10 @@ def bench():
 	# Device Under Test
 
 	# Pure python simulation
-	dut = ram(clk, data_a, data_b, addr_a, addr_b, we_a, we_b, q_a, q_b)
+	# dut = ram(clk, data_a, data_b, addr_a, addr_b, we_a, we_b, q_a, q_b)
 
 	# Generate verilog during simulation
-	# dut = toVerilog(ram, clk, data_a, data_b, addr_a, addr_b, we_a, we_b, q_a, q_b)
+	dut = toVerilog(ram, clk, data_a, data_b, addr_a, addr_b, we_a, we_b, q_a, q_b)
 
 	#dut.DATA_WIDTH = DATA_WIDTH
 	#dut.ADDR_WIDTH = ADDR_WIDTH
